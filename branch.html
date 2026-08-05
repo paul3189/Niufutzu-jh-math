@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>分支圖｜國中數學工具地圖</title>
+<link rel="stylesheet" href="assets/katex/katex.min.css">
+<link rel="stylesheet" href="assets/style.css">
+<link rel="stylesheet" href="assets/mapstyle.css">
+<link rel="stylesheet" href="assets/figstyle.css">
+<link rel="stylesheet" href="assets/theme-cow.css">
+<script defer src="assets/katex/katex.min.js"></script>
+<script defer src="assets/katex/auto-render.min.js"></script>
+</head>
+<body>
+<div class="topbar"><div class="topbar-inner">
+  <a class="cow-brand" href="index.html"><img class="cow-logo" src="assets/mascot/web/cow_stand.png" alt="牛夫子"><span class="brand-t">牛夫子‧國中數學</span></a>
+  <a href="map.html">🗺️ 回總圖</a>
+  <a href="gallery.html">🖼️ 幾何圖解牆</a>
+  <span class="crumb" id="crumb">分支圖</span>
+  <span class="spacer"></span>
+  <span id="gradeSwitch"></span>
+  <a href="guide.html">📖 使用說明</a>
+</div></div>
+
+<div class="wrap-wide">
+  <div class="map-hero">
+    <div class="hero-row">
+      <img class="hero-cow" src="assets/mascot/web/cow_baton.png" alt="拿著指揮棒上課的牛夫子">
+      <div class="hero-text">
+        <h1 id="domTitle">—</h1>
+        <p id="domAsk"></p>
+      </div>
+    </div>
+  </div>
+
+  <div class="mm-shell">
+    <div class="mm-bar">
+      <span>🖱️ 點<b>工具</b>看圖、公式、使用時機與限制</span>
+      <span class="sp"></span>
+      <button id="viewToggle">☰ 改用清單模式</button>
+      <button onclick="window.print()">🖨️ 列印</button>
+    </div>
+    <div class="mm-scroll" id="branchMap"></div>
+  </div>
+
+  <div class="legend">
+    <span><i style="background:#5c222b"></i>領域</span>
+    <span id="lgTopic"><i></i>主題</span>
+    <span><i style="background:#fff;border:1.5px solid #cbd5e1"></i>工具（點我）</span>
+  </div>
+
+  <h2 class="sec" id="detailHead"><span class="tag tag-keyword">📋</span>工具總表</h2>
+  <p class="kw-hint" id="detailHint">建議用法：遮住「工具」欄，只看「什麼時候用」，練習反射性想出該用哪個工具；再遮住「限制」欄，檢查自己會不會踩坑。</p>
+  <div class="mm-bar" style="border:1px solid var(--line);border-radius:12px;margin-bottom:6px">
+    <span>呈現方式</span>
+    <span class="sp"></span>
+    <button id="detailToggle">切換</button>
+  </div>
+  <div id="toolDetail"></div>
+
+  <div class="ch-nav">
+    <a href="map.html">← 回全景圖</a>
+    <a id="nextDom" href="#">下一個領域 →</a>
+  </div>
+
+  <div class="cow-credit">
+    <img src="assets/mascot/web/cow_cos.png" alt="牛夫子的背影">
+    <span>牛夫子圖文作者：楊安琪。幾何圖形由 jh-math-geometry 產生。</span>
+  </div>
+</div>
+
+<script src="data/figs.js"></script>
+<script src="data/toolmap.js"></script>
+<script src="data/jm-1-number.js"></script>
+<script src="data/jm-2-algebra.js"></script>
+<script src="data/jm-3-equation.js"></script>
+<script src="data/jm-4-function.js"></script>
+<script src="data/jm-5-angle.js"></script>
+<script src="data/jm-6-quad.js"></script>
+<script src="data/jm-7-circle.js"></script>
+<script src="data/jm-8-similar.js"></script>
+<script src="data/jm-9-solid.js"></script>
+<script src="data/jm-10-stat.js"></script>
+<script src="assets/jmap.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  MathMap.mountGradeSwitch("gradeSwitch");
+  var doms = MathMap.domains();
+  var id = MathMap.param("d") || doms[0].id;
+  var dom = MathMap.domainById(id) || doms[0];
+
+  document.title = dom.n + "｜國中數學工具地圖";
+  document.getElementById("crumb").textContent = "工具地圖 ▸ " + dom.n;
+  var h = document.getElementById("domTitle");
+  h.textContent = dom.icon + " " + dom.n;
+  h.style.color = dom.color;
+  document.getElementById("domAsk").textContent = dom.ask;
+  document.querySelector("#lgTopic i").style.cssText =
+    "background:" + dom.color + "22;border:1.5px solid " + dom.color;
+
+  MathMap.viewController("viewToggle", function (mode) {
+    var box = document.getElementById("branchMap");
+    box.classList.toggle("list", mode === "list");
+    if (mode === "list") MathMap.renderBranchList("branchMap", dom);
+    else MathMap.renderBranch("branchMap", dom);
+  });
+
+  // 幾何領域預設用「圖卡」，其餘領域預設用「表格」；可用按鈕互換。
+  var mode = dom.geo ? "cards" : "table";
+  var btn = document.getElementById("detailToggle");
+  function paintDetail() {
+    if (mode === "cards") {
+      MathMap.renderFigCards("toolDetail", dom);
+      document.getElementById("detailHead").innerHTML =
+        '<span class="tag tag-example">🖼️</span>圖解卡（點卡片看細節）';
+      document.getElementById("detailHint").textContent =
+        "每張卡片就是一個工具：上面是圖，下面是「什麼時候用」與「限制」。看圖想不起名稱時，正是要複習的地方。";
+      btn.textContent = "📋 改看工具總表";
+    } else {
+      MathMap.renderToolTable("toolDetail", dom);
+      document.getElementById("detailHead").innerHTML =
+        '<span class="tag tag-keyword">📋</span>工具總表（可列印、可遮欄自測）';
+      document.getElementById("detailHint").textContent =
+        "建議用法：遮住「工具」欄，只看「什麼時候用」，練習反射性想出該用哪個工具；再遮住「限制」欄，檢查自己會不會踩坑。";
+      btn.textContent = "🖼️ 改看圖解卡";
+    }
+  }
+  btn.addEventListener("click", function () {
+    mode = (mode === "cards") ? "table" : "cards";
+    paintDetail();
+  });
+  paintDetail();
+
+  // 下一個領域
+  var idx = doms.indexOf(dom);
+  var nxt = doms[(idx + 1) % doms.length];
+  var a = document.getElementById("nextDom");
+  a.href = "branch.html#d=" + nxt.id;
+  a.textContent = nxt.icon + " " + nxt.n + " →";
+  a.onclick = function (e) { e.preventDefault(); location.href = a.href; location.reload(); };
+
+  // 若帶 &t=主題，直接開該主題的說明
+  var t = MathMap.param("t");
+  if (t) {
+    (dom.topics || []).forEach(function (tp) {
+      if (tp.id !== t) return;
+      MathMap.openTool({
+        n: tp.n, g: tp.g, fig: tp.fig,
+        w: (tp.kw || []).map(function (k) { return "「" + k + "」"; }).join("、"),
+        l: tp.flow || ""
+      }, dom.n);
+    });
+  }
+});
+</script>
+</body>
+</html>

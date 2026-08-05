@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>國中數學工具地圖｜全景心智圖</title>
+<link rel="stylesheet" href="assets/katex/katex.min.css">
+<link rel="stylesheet" href="assets/style.css">
+<link rel="stylesheet" href="assets/mapstyle.css">
+<link rel="stylesheet" href="assets/figstyle.css">
+<link rel="stylesheet" href="assets/theme-cow.css">
+<script defer src="assets/katex/katex.min.js"></script>
+<script defer src="assets/katex/auto-render.min.js"></script>
+</head>
+<body>
+<div class="topbar"><div class="topbar-inner">
+  <a class="cow-brand" href="index.html"><img class="cow-logo" src="assets/mascot/web/cow_stand.png" alt="牛夫子"><span class="brand-t">牛夫子‧國中數學</span></a>
+  <a href="map.html">🗺️ 工具地圖</a>
+  <a href="gallery.html">🖼️ 幾何圖解牆</a>
+  <span class="crumb">全景心智圖</span>
+  <span class="spacer"></span>
+  <span id="gradeSwitch"></span>
+  <a href="guide.html">📖 使用說明</a>
+</div></div>
+
+<div class="wrap-wide">
+
+  <div class="map-hero">
+    <div class="hero-row">
+      <img class="hero-cow" src="assets/mascot/web/cow_teach.png" alt="拿著指揮棒的牛夫子">
+      <div class="hero-text">
+        <h1>🗺️ 國中數學工具地圖</h1>
+        <p>面對陌生題目時，你需要的不是「想起某一題」，而是「知道自己有哪些武器」。<br>
+        這張圖把國中三年的數學排成十個領域，每個領域再展開成主題與工具。</p>
+      </div>
+    </div>
+  </div>
+
+  <div id="gradeBanner"></div>
+
+  <!-- ── 關鍵字搜尋 ── -->
+  <h2 class="sec"><span class="tag tag-keyword">🔍</span>關鍵字 → 工具｜直接搜</h2>
+  <div class="kw-search">
+    <input id="kwInput" type="text" placeholder="輸入題目裡的字，例如：平行、全等、至少、面積、相似、對角線、機率…">
+  </div>
+  <p class="kw-hint">會在全部 <b id="toolCount">—</b> 項工具的「名稱／使用時機／限制／常見錯誤」中搜尋。點搜尋結果可看完整說明與圖。</p>
+  <div id="kwHits" class="hit-list"></div>
+
+  <!-- ── 破題流程 ── -->
+  <h2 class="sec"><span class="tag tag-concept">🧭</span>拆解問題的四個提問</h2>
+  <div class="flow-grid">
+    <div class="flow-card">
+      <h4>① 這題「問什麼」？</h4>
+      <ul>
+        <li>求<b>一個數</b> → 列方程式</li>
+        <li>求<b>範圍</b> → 列不等式</li>
+        <li>求<b>長度</b> → 畢氏定理、相似形</li>
+        <li>求<b>角度</b> → 內角和、外角、平行線截角</li>
+        <li>求<b>面積體積</b> → 找底與高</li>
+        <li>要<b>證明</b> → 三角形全等</li>
+      </ul>
+    </div>
+    <div class="flow-card">
+      <h4>② 題目「給了什麼」？</h4>
+      <ul>
+        <li>給<b>兩條平行線</b> → 同位角、內錯角、同側內角</li>
+        <li>給<b>直角</b> → 畢氏定理</li>
+        <li>給<b>兩組角相等</b> → AA 相似</li>
+        <li>給<b>中點</b> → 中點連線定理</li>
+        <li>給<b>圓與角</b> → 圓周角定理</li>
+        <li>給<b>一堆數據</b> → 平均數、中位數、盒狀圖</li>
+      </ul>
+    </div>
+    <div class="flow-card">
+      <h4>③ 我有「哪些工具」？</h4>
+      <ul>
+        <li>算不出來時，先<b>把圖畫出來</b>並標上已知</li>
+        <li>幾何找不到路 → 找<b>直角三角形</b>或<b>相似三角形</b></li>
+        <li>正面難算 → 用<b>餘事件</b>（至少 → 1 減）</li>
+        <li>數字太醜 → 先<b>因式分解</b>或<b>設未知數</b></li>
+        <li>看不出規律 → <b>列出前幾項</b>再看差</li>
+      </ul>
+    </div>
+    <div class="flow-card">
+      <h4>④ 這個工具的「限制」是什麼？</h4>
+      <ul>
+        <li>不等式乘除負數 → <b>變號</b></li>
+        <li>根號內 ≥ 0、分母 ≠ 0</li>
+        <li>平方後 → <b>兩個答案</b>，要檢查合不合理</li>
+        <li>全等判別沒有 <b>SSA、AAA</b></li>
+        <li>圓周角定理要<b>對同一段弧</b></li>
+        <li>相似的面積比是 <b>k²</b> 不是 k</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ── 總圖 ── -->
+  <h2 class="sec"><span class="tag tag-concept">🌳</span>全景圖：十大領域</h2>
+  <p class="kw-hint">點<b>領域</b>或<b>主題</b>可展開該分支的細部心智圖（每個領域有自己一張圖）。圖太寬可左右捲動。</p>
+  <div class="mm-shell">
+    <div class="mm-bar">
+      <span>🖱️ 點節點進入分支圖</span>
+      <span class="sp"></span>
+      <button id="viewToggle">☰ 改用清單模式</button>
+      <button onclick="window.print()">🖨️ 列印</button>
+    </div>
+    <div class="mm-scroll" id="masterMap"></div>
+  </div>
+
+  <div class="legend">
+    <span><i style="background:#5c222b"></i>根：國中數學</span>
+    <span><i style="background:#f2dade;border:1.5px solid #a8324a"></i>領域（10 個）</span>
+    <span><i style="background:#fff;border:1.5px solid #dcb9bf"></i>主題（點進去看工具）</span>
+  </div>
+
+  <!-- ── 領域卡 ── -->
+  <h2 class="sec"><span class="tag tag-example">📚</span>十大領域各自負責什麼</h2>
+  <div id="domCards"></div>
+
+  <!-- ── 使用建議 ── -->
+  <h2 class="sec"><span class="tag tag-check">💡</span>怎麼用這張圖</h2>
+  <div class="card concept">
+    <p><b>平常讀書時：</b>每讀完一章，回到這張圖找到它的位置，問自己「它跟旁邊的主題有什麼關係？」——
+    孤立記住的公式最容易忘，長在樹上的公式才叫理解。</p>
+    <p><b>寫題目卡住時：</b>不要馬上翻解答。先問「這題屬於哪個領域？」→ 進入該分支圖 →
+    掃過那個主題的所有工具 → 逐一問「這個工具的觸發條件，題目有沒有給？」</p>
+    <p><b>幾何題卡住時：</b>去<a href="gallery.html">幾何圖解牆</a>把圖掃一遍。
+    很多時候不是不會，而是「沒想到這張圖可以這樣用」。</p>
+    <p><b>訂正錯題時：</b>錯的往往不是計算，而是「限制沒檢查」。到工具的<span style="color:var(--red);font-weight:700">限制／前提</span>欄
+    找到你踩的那個坑，把它抄進錯題本。</p>
+    <p><b>考前複習時：</b>切到自己的年級，把每個領域的分支圖印出來，遮住「工具」欄，只看「什麼時候用」，
+    測試自己能不能反射性地說出工具名稱。</p>
+  </div>
+
+  <div class="cow-say">
+    <img src="assets/mascot/web/cow_zzz.png" alt="邊讀書邊睡著的牛夫子">
+    <div class="say-body">
+      <span class="say-t">牛夫子說：</span>
+      一直重讀課本很容易讀到睡著。改成「看著這張圖，把每個主題的工具唸出來」——
+      唸得出來的跳過，卡住的才回去讀，時間會省一半。
+    </div>
+  </div>
+
+  <div class="cow-credit">
+    <img src="assets/mascot/web/cow_cos.png" alt="牛夫子的背影">
+    <span>牛夫子圖文作者：楊安琪。幾何圖形由 jh-math-geometry 產生。</span>
+  </div>
+
+</div>
+
+<script src="data/figs.js"></script>
+<script src="data/toolmap.js"></script>
+<script src="data/jm-1-number.js"></script>
+<script src="data/jm-2-algebra.js"></script>
+<script src="data/jm-3-equation.js"></script>
+<script src="data/jm-4-function.js"></script>
+<script src="data/jm-5-angle.js"></script>
+<script src="data/jm-6-quad.js"></script>
+<script src="data/jm-7-circle.js"></script>
+<script src="data/jm-8-similar.js"></script>
+<script src="data/jm-9-solid.js"></script>
+<script src="data/jm-10-stat.js"></script>
+<script src="assets/jmap.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  MathMap.mountGradeSwitch("gradeSwitch");
+  MathMap.renderGradeBanner("gradeBanner");
+  MathMap.viewController("viewToggle", function (mode) {
+    var box = document.getElementById("masterMap");
+    box.classList.toggle("list", mode === "list");
+    if (mode === "list") MathMap.renderMasterList("masterMap");
+    else MathMap.renderMaster("masterMap");
+  });
+  MathMap.renderDomainCards("domCards");
+  MathMap.bindSearch("kwInput", "kwHits");
+  document.getElementById("toolCount").textContent = MathMap.allTools().length;
+});
+</script>
+</body>
+</html>

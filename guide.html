@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>使用說明｜國中數學工具地圖</title>
+<link rel="stylesheet" href="assets/style.css">
+<link rel="stylesheet" href="assets/mapstyle.css">
+<link rel="stylesheet" href="assets/figstyle.css">
+<link rel="stylesheet" href="assets/theme-cow.css">
+</head>
+<body>
+<div class="topbar"><div class="topbar-inner">
+  <a class="cow-brand" href="index.html"><img class="cow-logo" src="assets/mascot/web/cow_stand.png" alt="牛夫子"><span class="brand-t">牛夫子‧國中數學</span></a>
+  <a href="map.html">🗺️ 工具地圖</a>
+  <a href="gallery.html">🖼️ 幾何圖解牆</a>
+  <span class="spacer"></span>
+  <span class="crumb">使用說明</span>
+</div></div>
+
+<div class="wrap">
+  <div class="hero">
+    <div class="hero-row">
+      <img class="hero-cow" src="assets/mascot/web/cow_baton.png" alt="拿著指揮棒的牛夫子">
+      <div class="hero-text">
+        <h1>📖 使用說明</h1>
+        <p>這是「高中數學工具地圖」的國中版。同一套邏輯：<b>不是背公式，而是知道自己有哪些工具、什麼時候用、有什麼限制。</b></p>
+      </div>
+    </div>
+  </div>
+
+  <h2 class="sec"><span class="tag tag-concept">🗺️</span>三個頁面各做什麼</h2>
+  <div class="card concept">
+    <p><b>① <a href="map.html">工具地圖</a>（全景心智圖）</b><br>
+    十個領域 → 每個領域的主題。點節點會進入該領域的分支圖。上方有關鍵字搜尋，
+    可以直接輸入題目裡出現的字（例如「內錯角」「至少」「對角線」）找工具。</p>
+    <p><b>② 分支圖</b><br>
+    領域 → 主題 → 工具。點工具會從右側滑出抽屜，依序顯示
+    <b>圖 → 定義 → 性質／公式 → 什麼時候用 → 限制／前提 → 常見錯誤</b>。
+    幾何領域下方預設是「圖解卡」，非幾何領域預設是「工具總表」，可用按鈕互換。</p>
+    <p><b>③ <a href="gallery.html">幾何圖解牆</a></b><br>
+    把幾何領域所有的圖排成一面牆。適合考前拿來「看圖說定理」，或直接列印成複習卡。</p>
+    <p><b>④ <a href="reflex.html">直覺道場</a>（限時反射訓練）</b><br>
+    地圖是「查得到」，道場是「不用查也想得到」。一場 10 題（約 2 分鐘），在秒數內按對就打怪，
+    答錯或超時扣一顆心，結束後給弱點診斷。</p>
+  </div>
+
+  <h2 class="sec"><span class="tag tag-example">⚔️</span>直覺道場：把「會」練成「不用想」</h2>
+  <div class="card example">
+    <p>考場上真正拖垮學生的，通常不是不會，而是<b>算太久</b>。
+    <a href="reflex.html"><b>⚔️ 直覺道場</b></a>只練一件事：看到題目的那一秒，正確的做法要自己跳出來。</p>
+    <ul>
+      <li><b>五個難度（每題可用的秒數）</b>：<b>20 秒</b> 見習（可以在紙上算一下）→ <b>15 秒</b> 熟手 →
+      <b>10 秒</b> 應試（會考一題的真實節奏）→ <b>5 秒</b> 高手 → <b>3 秒</b> 大師（只剩反射）。
+      秒數愈短分數倍率愈高；傷害不受難度影響，所以換難度不會忽然變得打不動怪。</li>
+      <li><b>三種範圍</b>：<b>指定單元</b>（<b>可複選</b>，段考範圍有幾個單元就勾幾個；每個領域可一鍵全選）、
+      <b>指定年級</b>（期末總複習）、
+      <b>國中全範圍</b>（等於會考範圍）。每一題都掛在工具地圖的單元上，範圍是真的有過濾。</li>
+      <li><b>五種題型可複選</b>：秒算直覺、公式辨識、關鍵字反射、圖形性質、坐標與函數。
+      選了某個單元後，<b>那個單元沒有的題型會自動變灰</b>，並顯示這個範圍還剩幾個題源。</li>
+      <li><b>計算題是即時生成的</b>，數字每次都不一樣，背不起來；答案由程式算出，不會有題庫錯答。</li>
+      <li><b>答錯時顯示的那句理由才是重點</b>：錯一次看一次，比重寫十題有效。</li>
+      <li><b>結束後給兩層診斷</b>：題型診斷（正確率＋平均反應時間）與<b>單元診斷</b>——
+      哪個單元答錯了，就直接連到工具地圖對應的抽屜。紀錄存在瀏覽器裡會累積。</li>
+    </ul>
+    <div class="callout tip"><div class="co-title">💡 建議用法</div>
+    <b>學生</b>：段考前把考試範圍的幾個單元一起勾起來、配「20 秒」把觀念先做對，考前一週改成「10 秒」逼速度；
+    平常每天開一場全範圍（約 3 分鐘）當暖身。<br>
+    <b>教師</b>：課堂前 5 分鐘投影出來全班一起喊答案；或指定「大師 3 秒 ＋ 指定單元：乘法公式」當單元前測——
+    3 秒內展不開 <code>(a+b)²</code>，代表還沒熟。</div>
+  </div>
+
+  <h2 class="sec"><span class="tag tag-keyword">🎒</span>年級切換</h2>
+  <div class="card">
+    <p>右上角可切換 <b>全部／七年級／八年級／九年級</b>，選定後只顯示該年級教過的主題與工具，
+    設定會記在瀏覽器裡，換頁不會跑掉。</p>
+    <p>年級是依 108 課綱的一般教學順序標在資料檔的 <code>g</code> 欄位。
+    各校進度略有差異；要調整的話，打開 <code>data/jm-*.js</code>，改該主題的 <code>g: 8</code> 即可，
+    橫跨兩個年級可寫成 <code>g: [7, 8]</code>。</p>
+  </div>
+
+  <h2 class="sec"><span class="tag tag-check">📐</span>幾何圖形：先定義，再性質，再判別</h2>
+  <div class="card">
+    <p>每個幾何圖形（平行四邊形、矩形、菱形、正方形、梯形、等腰梯形、直角梯形、箏形、
+    等腰三角形、正三角形、圓、柱錐球…）的條目都拆成三段，各自一張卡：</p>
+    <ul>
+      <li><b>定義</b>：它「是什麼」。抽屜裡排在最上面，一句話。</li>
+      <li><b>性質</b>：已知它是這個圖形之後，能直接拿來用的東西，條列成一行一條。</li>
+      <li><b>判別</b>：還不知道、要「證明它是」這個圖形時能用的條件。</li>
+    </ul>
+    <p>把這三件事分開是有理由的：學生最常犯的錯就是<b>拿性質當判別法用</b>——
+    例如「平行四邊形的鄰角互補」是性質，但單看一組鄰角互補推不出平行四邊形。</p>
+  </div>
+
+  <h2 class="sec"><span class="tag tag-example">🖼️</span>幾何為什麼要用圖</h2>
+  <div class="card">
+    <p>國中幾何的定理，本體就是圖：<b>「同側內角互補」四個字記不住，但那個像 C 的形狀看一眼就懂。</b>
+    所以這份地圖裡，線角、四邊形、圓、相似、立體五個領域的每一項工具都配了一張標好記號
+    （等邊刻度、角弧、直角符號、虛線輔助線）的圖。</p>
+    <p>建議的練習方式：</p>
+    <ul>
+      <li><b>看圖說名稱</b>：在圖解牆只看圖，說出定理名稱與結論。</li>
+      <li><b>看名稱畫圖</b>：反過來，聽到「中點連線定理」能不能自己畫出圖並標好記號。</li>
+      <li><b>找觸發條件</b>：看到圖時問「題目要出現什麼，我才能用它？」——那就是卡片上的「什麼時候用」。</li>
+    </ul>
+  </div>
+
+  <h2 class="sec"><span class="tag tag-check">🛠️</span>自己改內容</h2>
+  <div class="card">
+    <p>整份地圖是純靜態網頁，<b>雙擊 <code>index.html</code> 就能開</b>，不需要安裝任何東西。</p>
+    <ul>
+      <li><b>改文字（工具、時機、限制、常見錯誤）</b>：編輯 <code>data/jm-*.js</code>，存檔後重新整理即可。</li>
+      <li><b>加一張幾何圖</b>：在 <code>_figs/spec.json</code> 加一筆（標準圖形），
+      或在 <code>_figs/custom_figs.py</code> 寫一個函式（特殊圖形），
+      然後執行 <code>python _figs/render_all.py</code> 重建 <code>data/figs.js</code>，
+      最後在工具上加 <code>fig: "圖的 id"</code>。</li>
+      <li><b>換配色</b>：領域顏色寫在各資料檔開頭的 <code>color</code>；整體色票在 <code>assets/style.css</code> 的 <code>:root</code>。</li>
+    </ul>
+    <p class="kw-hint">幾何圖由 <code>jh-math-geometry</code> 技能的渲染器產生，樣式與段考卷用圖一致，
+    因此同一張圖也可以直接拿去出題或做講義。</p>
+  </div>
+
+  <h2 class="sec"><span class="tag tag-example">🐮</span>關於牛夫子</h2>
+  <div class="card">
+    <p>整份地圖的視覺以<b>牛夫子</b>為主角：圓框眼鏡、深酒紅斑塊、粉紅色的數學課本，
+    連幾何圖的線條顏色都調成同一套色票，所以圖印出來跟網頁上看起來是同一個世界。</p>
+    <p><b>牛夫子出現在這些地方：</b></p>
+    <ul>
+      <li>左上角的招牌、每一頁標題旁</li>
+      <li><b>瞪大眼睛的牛夫子</b>：工具說明裡的「常見錯誤」——那一欄最該記住</li>
+      <li><b>疑問的牛夫子</b>：關鍵字搜尋找不到東西時</li>
+      <li><b>睡著的牛夫子</b>：提醒你別再用「一直重讀」的方式複習</li>
+    </ul>
+    <p class="kw-hint">圖文作者：楊安琪。原圖放在 <code>assets/mascot/</code>，
+    網頁用的去背縮圖由 <code>python _figs/prep_mascot.py</code> 產生於 <code>assets/mascot/web/</code>。
+    想換掉配色的話，整套色票集中在 <code>assets/theme-cow.css</code> 的 <code>:root</code>，
+    幾何圖的顏色對照表則在 <code>_figs/build_figs.py</code> 的 <code>PALETTE</code>。</p>
+  </div>
+
+  <div class="ch-nav">
+    <a href="index.html">← 回首頁</a>
+    <a href="map.html">進入工具地圖 →</a>
+  </div>
+
+  <div class="cow-credit">
+    <img src="assets/mascot/web/cow_cos.png" alt="牛夫子的背影">
+    <span>牛夫子圖文作者：楊安琪。幾何圖形由 jh-math-geometry 產生。</span>
+  </div>
+</div>
+</body>
+</html>

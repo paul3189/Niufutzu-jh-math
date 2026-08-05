@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>國中數學工具地圖｜知識體系心智圖</title>
+<link rel="stylesheet" href="assets/style.css">
+<link rel="stylesheet" href="assets/mapstyle.css">
+<link rel="stylesheet" href="assets/figstyle.css">
+<link rel="stylesheet" href="assets/theme-cow.css">
+</head>
+<body>
+<div class="topbar"><div class="topbar-inner">
+  <a class="cow-brand" href="index.html"><img class="cow-logo" src="assets/mascot/web/cow_stand.png" alt="牛夫子"><span class="brand-t">牛夫子‧國中數學</span></a>
+  <a href="map.html">🗺️ 工具地圖</a>
+  <a href="gallery.html">🖼️ 幾何圖解牆</a>
+  <span class="spacer"></span>
+  <span id="gradeSwitch"></span>
+  <a href="guide.html">📖 使用說明</a>
+</div></div>
+
+<div class="wrap-wide">
+  <div class="map-hero">
+    <div class="hero-row">
+      <img class="hero-cow" src="assets/mascot/web/cow_scholar.png" alt="讀書中的牛夫子">
+      <div class="hero-text">
+        <h1>🗺️ 國中數學工具地圖</h1>
+        <p>把整個國中數學攤開成一張圖：<b>問什麼 → 出現什麼關鍵字 → 可以動用哪些工具 → 這些工具有什麼限制</b><br>
+        幾何的部分，能用圖說的就不用字說。</p>
+        <p style="margin-top:16px">
+          <a href="map.html" style="display:inline-block;background:var(--cow-wine);color:#fff;text-decoration:none;
+             padding:10px 22px;border-radius:999px;font-weight:700;margin:4px">🗺️ 進入全景心智圖</a>
+          <a href="gallery.html" style="display:inline-block;background:#fff;color:var(--cow-wine);text-decoration:none;
+             border:2px solid var(--cow-wine);padding:8px 20px;border-radius:999px;font-weight:700;margin:4px">🖼️ 幾何圖解牆</a>
+          <a href="reflex.html" style="display:inline-block;background:linear-gradient(135deg,#5c222b,#8e3b62);color:#fff;
+             text-decoration:none;padding:10px 22px;border-radius:999px;font-weight:700;margin:4px">⚔️ 直覺道場（限時反射訓練）</a>
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div id="gradeBanner"></div>
+
+  <div class="dom-grid" style="margin-top:22px">
+    <div class="dom-card" style="border-left-color:#0891b2;cursor:default">
+      <span class="dc-t" style="color:#0891b2">📐 幾何以圖為主</span>
+      <span class="dc-a">線角、四邊形、圓、相似、立體五個領域的每一項工具都配一張標好記號的圖，
+      點開就能看到「這個定理長什麼樣子」。</span>
+      <span class="dc-k">🖼️ 共 <b id="figN">—</b> 張圖</span>
+    </div>
+    <div class="dom-card" style="border-left-color:#7c3aed;cursor:default">
+      <span class="dc-t" style="color:#7c3aed">🎒 依年級篩選</span>
+      <span class="dc-a">右上角可切換七／八／九年級，只顯示該年級教過的主題，
+      複習範圍一目了然。</span>
+      <span class="dc-k">🔑 108 課綱一般教學順序</span>
+    </div>
+    <div class="dom-card" style="border-left-color:#f59e0b;cursor:default">
+      <span class="dc-t" style="color:#f59e0b">🔍 關鍵字找工具</span>
+      <span class="dc-a">在地圖頁輸入題目裡出現的字（平行、全等、至少、面積…），
+      直接找出可能用得上的工具與它的限制。</span>
+      <span class="dc-k">🔑 共 <b id="toolN">—</b> 項工具</span>
+    </div>
+  </div>
+
+  <h2 class="sec"><span class="tag tag-concept">🌳</span>十大領域</h2>
+  <div id="domCards"></div>
+
+  <div class="cow-say">
+    <img src="assets/mascot/web/cow_teach.png" alt="拿著指揮棒的牛夫子">
+    <div class="say-body">
+      <span class="say-t">牛夫子說：</span>
+      公式背起來只能撐一次考試，知道「什麼時候該用它」才撐得過三年。
+      每讀完一章就回來這張圖找到它的位置，問自己：它跟旁邊的主題有什麼關係？
+    </div>
+  </div>
+
+  <div class="cow-credit">
+    <img src="assets/mascot/web/cow_cos.png" alt="牛夫子的背影">
+    <span>牛夫子圖文作者：楊安琪。幾何圖形由 jh-math-geometry 產生。</span>
+  </div>
+</div>
+
+<script src="data/figs.js"></script>
+<script src="data/toolmap.js"></script>
+<script src="data/jm-1-number.js"></script>
+<script src="data/jm-2-algebra.js"></script>
+<script src="data/jm-3-equation.js"></script>
+<script src="data/jm-4-function.js"></script>
+<script src="data/jm-5-angle.js"></script>
+<script src="data/jm-6-quad.js"></script>
+<script src="data/jm-7-circle.js"></script>
+<script src="data/jm-8-similar.js"></script>
+<script src="data/jm-9-solid.js"></script>
+<script src="data/jm-10-stat.js"></script>
+<script src="assets/jmap.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  MathMap.mountGradeSwitch("gradeSwitch");
+  MathMap.renderGradeBanner("gradeBanner");
+  MathMap.renderDomainCards("domCards");
+  document.getElementById("figN").textContent = MathMap.figCount();
+  document.getElementById("toolN").textContent = MathMap.allTools().length;
+});
+</script>
+</body>
+</html>

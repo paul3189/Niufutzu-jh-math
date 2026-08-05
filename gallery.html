@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>幾何圖解牆｜國中數學工具地圖</title>
+<link rel="stylesheet" href="assets/katex/katex.min.css">
+<link rel="stylesheet" href="assets/style.css">
+<link rel="stylesheet" href="assets/mapstyle.css">
+<link rel="stylesheet" href="assets/figstyle.css">
+<link rel="stylesheet" href="assets/theme-cow.css">
+<script defer src="assets/katex/katex.min.js"></script>
+<script defer src="assets/katex/auto-render.min.js"></script>
+</head>
+<body>
+<div class="topbar"><div class="topbar-inner">
+  <a class="cow-brand" href="index.html"><img class="cow-logo" src="assets/mascot/web/cow_stand.png" alt="牛夫子"><span class="brand-t">牛夫子‧國中數學</span></a>
+  <a href="map.html">🗺️ 工具地圖</a>
+  <a href="gallery.html">🖼️ 幾何圖解牆</a>
+  <span class="spacer"></span>
+  <span id="gradeSwitch"></span>
+  <a href="guide.html">📖 使用說明</a>
+</div></div>
+
+<div class="wrap-wide">
+  <div class="map-hero">
+    <div class="hero-row">
+      <img class="hero-cow" src="assets/mascot/web/cow_question.png" alt="思考中的牛夫子">
+      <div class="hero-text">
+        <h1>🖼️ 幾何圖解牆</h1>
+        <p>國中幾何的每一個定理，都先是一張圖。<br>
+        <b>用法：先只看圖，說出它是哪個定理、能推出什麼；說不出來再點開卡片。</b></p>
+      </div>
+    </div>
+  </div>
+
+  <div id="gradeBanner"></div>
+
+  <div class="mm-bar" style="border:1px solid var(--line);border-radius:12px">
+    <span>目前顯示 <b id="figShown">—</b> 張圖</span>
+    <span class="sp"></span>
+    <button id="scopeToggle">＋ 也顯示函數圖形</button>
+    <button onclick="window.print()">🖨️ 列印成複習卡</button>
+  </div>
+
+  <div class="gal-nav" id="galNav"></div>
+
+  <div id="gallery"></div>
+
+  <div class="cow-say">
+    <img src="assets/mascot/web/cow_baton.png" alt="拿著指揮棒的牛夫子">
+    <div class="say-body">
+      <span class="say-t">牛夫子說：</span>
+      看到圖只說得出「這是三角形」還不夠。要練到看到圖就能講出
+      <b>「這張圖能推出什麼」</b> 與 <b>「題目要給我什麼我才能用」</b>，才算真的會。
+    </div>
+  </div>
+
+  <div class="ch-nav">
+    <a href="map.html">← 回全景圖</a>
+    <a href="guide.html">使用說明 →</a>
+  </div>
+
+  <div class="cow-credit">
+    <img src="assets/mascot/web/cow_cos.png" alt="牛夫子的背影">
+    <span>牛夫子圖文作者：楊安琪。幾何圖形由 jh-math-geometry 產生。</span>
+  </div>
+</div>
+
+<script src="data/figs.js"></script>
+<script src="data/toolmap.js"></script>
+<script src="data/jm-1-number.js"></script>
+<script src="data/jm-2-algebra.js"></script>
+<script src="data/jm-3-equation.js"></script>
+<script src="data/jm-4-function.js"></script>
+<script src="data/jm-5-angle.js"></script>
+<script src="data/jm-6-quad.js"></script>
+<script src="data/jm-7-circle.js"></script>
+<script src="data/jm-8-similar.js"></script>
+<script src="data/jm-9-solid.js"></script>
+<script src="data/jm-10-stat.js"></script>
+<script src="assets/jmap.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  MathMap.mountGradeSwitch("gradeSwitch");
+  MathMap.renderGradeBanner("gradeBanner");
+
+  // 預設只看「純幾何」；坐標與函數雖然也標了 geo，但屬於代數圖形，用按鈕另外開關
+  var geoOnly = true;
+  var btn = document.getElementById("scopeToggle");
+
+  function skipped() { return geoOnly ? ["function"] : []; }
+
+  function paint() {
+    var n = MathMap.renderGallery("gallery", { geoOnly: true, exclude: skipped() });
+    document.getElementById("figShown").textContent = n;
+    btn.textContent = geoOnly ? "＋ 也顯示函數圖形" : "－ 只看純幾何";
+    buildNav();
+  }
+
+  function countFigs(dom) {
+    var n = 0;
+    (dom.topics || []).forEach(function (t) {
+      (t.tools || []).forEach(function (x) { if (x.fig) n++; });
+    });
+    return n;
+  }
+
+  function buildNav() {
+    var nav = document.getElementById("galNav");
+    nav.innerHTML = MathMap.domains().filter(function (d) {
+      return d.geo && skipped().indexOf(d.id) === -1 && countFigs(d) > 0;
+    }).map(function (d) {
+      return '<a href="#g-' + d.id + '" style="border-left:5px solid ' + d.color + '">' +
+        d.icon + " " + d.n + "</a>";
+    }).join("");
+  }
+
+  btn.addEventListener("click", function () { geoOnly = !geoOnly; paint(); });
+  paint();
+});
+</script>
+</body>
+</html>
