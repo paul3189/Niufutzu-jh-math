@@ -1,0 +1,112 @@
+/* 國中版追加樣式：幾何圖卡、縮圖、年級標籤
+ * （style.css 與 mapstyle.css 沿用高中版，這裡只加國中版多出來的東西） */
+
+/* ── 定義欄 ──
+ * 幾何圖形一律「先定義、再性質」：定義排在圖的下面、性質的上面。 */
+.dw-def {
+  background: #fff; border: 1.5px dashed var(--line); border-radius: 12px;
+  padding: 9px 14px; font-size: .96rem; font-weight: 600;
+}
+.fig-card .fc-d { font-size: .82rem; color: #475569; }
+table.tools td .t-def {
+  display: block; font-size: .86rem; font-weight: 600; color: #475569;
+  margin-bottom: 4px;
+}
+
+/* ── 公式框 ──
+ * 公式是每張工具卡最主要的東西，要一眼看完，所以過長的公式一律在資料裡用
+ * \begin{gathered}…\\…\end{gathered} 拆成多行往下長，而不是靠左右捲動。
+ * 新增或修改公式後，用 python _figs/wrap_formulas.py --check 確認沒有過寬的行。 */
+/* 條列的性質用 \begin{aligned} 各行靠左，整塊也靠左，才有一致的左緣 */
+.dw-formula .katex-display { margin: .25em 0; text-align: left; }
+.dw-formula .katex-display > .katex { text-align: left; }
+.dw-formula .katex-display + .katex-display { margin-top: .1em; }
+table.tools td .katex-display { margin: .2em 0; text-align: left; }
+table.tools td .katex-display > .katex { text-align: left; }
+
+/* ── 圖的通用容器 ── */
+.fig { display: flex; justify-content: center; align-items: center; }
+.fig svg, .fig-card svg, .lv-thumb svg, .hit-thumb svg, table.tools td.t-fig svg {
+  max-width: 100%; height: auto; display: block;
+}
+.fig.fig-lg {
+  background: #fff; border: 1px solid var(--line); border-radius: 12px;
+  padding: 8px; margin-bottom: 4px;
+}
+.fig.fig-lg svg { width: 100%; max-width: 380px; }
+
+/* ── 圖卡格線（分支頁的幾何領域、圖解牆） ── */
+.fig-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 14px; margin: 12px 0 26px;
+}
+.fig-grid.tight { grid-template-columns: repeat(auto-fill, minmax(215px, 1fr)); gap: 12px; }
+
+.fig-card {
+  display: flex; flex-direction: column; gap: 6px; text-align: left;
+  background: var(--card); border: 1px solid var(--line); border-radius: 14px;
+  padding: 10px 12px 12px; box-shadow: var(--shadow); cursor: pointer;
+  font-family: inherit; color: var(--ink); transition: transform .12s, border-color .12s;
+}
+.fig-card:hover { transform: translateY(-2px); border-color: #94a3b8; }
+.fig-card .fc-fig {
+  display: flex; align-items: center; justify-content: center;
+  background: #fff; border: 1px solid #eef2f7; border-radius: 10px; padding: 4px;
+  min-height: 128px;
+}
+.fig-card .fc-fig svg { max-height: 230px; }
+
+/* 寬型的圖（多格並排說明）橫跨兩欄，才不會縮到看不清楚 */
+.fig-card.wide { grid-column: span 2; }
+.fig-card.wide .fc-fig { min-height: 170px; }
+.fig-card.wide .fc-fig svg { max-height: 300px; }
+.fig-card .fc-nofig { color: #cbd5e1; font-size: .85rem; }
+.fig-card .fc-n { font-weight: 800; font-size: .98rem; }
+.fig-card .fc-w { font-size: .84rem; color: #92400e; }
+.fig-card .fc-l { font-size: .82rem; color: #b91c1c; }
+
+/* ── 清單模式／搜尋結果的小縮圖 ── */
+.lv-tool { display: flex; flex-direction: column; }
+.lv-tool .lv-thumb {
+  display: block; width: 108px; float: right; margin: 0 0 4px 10px;
+}
+.hit { display: flex; gap: 12px; align-items: flex-start; }
+.hit .hit-thumb { flex: 0 0 96px; }
+.hit .hit-main { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+
+/* ── 工具總表的「圖」欄 ── */
+table.tools td.t-fig { width: 150px; }
+table.tools td.t-fig svg { width: 100%; }
+
+/* ── 年級／幾何標籤 ── */
+.g-chip, .geo-chip {
+  display: inline-block; font-size: .7rem; font-weight: 800; letter-spacing: .03em;
+  padding: 2px 8px; border-radius: 999px; margin-left: 7px; vertical-align: middle;
+}
+.g-chip { background: var(--purple-soft); color: var(--purple); }
+.geo-chip { background: var(--green-soft); color: var(--green); }
+
+/* ── 圖解牆的錨點導覽 ── */
+.gal-nav { display: flex; flex-wrap: wrap; gap: 8px; margin: 14px 0 4px; }
+.gal-nav a {
+  text-decoration: none; font-weight: 700; font-size: .9rem; padding: 6px 14px;
+  border: 1.5px solid var(--line); border-radius: 999px; background: #fff; color: var(--ink);
+}
+.gal-nav a:hover { border-color: #94a3b8; }
+
+@media (max-width: 720px) {
+  /* 手機的抽屜滿版但內距吃掉不少寬度，公式又不能橫向捲，所以把內距收窄 */
+  .mm-drawer .dw-body { padding: 14px 12px 40px; }
+  .dw-formula { padding: 10px 10px; }
+  .fig-grid, .fig-grid.tight { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); }
+  .fig-card .fc-fig { min-height: 96px; }
+  .fig-card.wide { grid-column: 1 / -1; }   /* 手機一欄，寬圖直接佔滿 */
+  table.tools td.t-fig { width: auto; }
+  table.tools td.t-fig svg { max-width: 240px; }
+  .hit .hit-thumb { flex: 0 0 72px; }
+}
+
+@media print {
+  .fig-card { break-inside: avoid; box-shadow: none; }
+  .gal-nav { display: none; }
+}
