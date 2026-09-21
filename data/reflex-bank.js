@@ -890,7 +890,7 @@
     ["equation.quad", 8, "$b^2-4ac$ 是什麼？", "判別式", ["公式解", "兩根之和", "兩根之積"],
       "它決定實根的個數：$>0$ 兩相異實根、$=0$ 重根、$<0$ 沒有實根"],
     ["quad.trap", 8, "「(上底 + 下底) × 高 ÷ 2」是什麼？", "梯形面積", ["平行四邊形面積", "菱形面積", "三角形面積"],
-      "到九上學了「梯形兩腰中點連線」後，也可以看成「兩腰中點連線長 × 高」"],
+      "也可以看成「兩腰中點連線長 × 高」"],
     ["quad.special", 8, "「兩對角線相乘 ÷ 2」是什麼？", "菱形（或箏形）的面積", ["矩形面積", "梯形面積", "平行四邊形面積"],
       "對角線互相垂直的四邊形都適用"],
     ["algebra.seq", 8, "$a_1+(n-1)d$ 是什麼？", "等差數列的第 n 項", ["等差級數的和", "公差", "等比數列的第 n 項"],
@@ -1338,7 +1338,7 @@
       "比「到圓心的距離」與半徑：$" + d + (d < r ? "<" : d === r ? "=" : ">") + r + "$ → " + ans);
   }
 
-  /* 梯形面積與兩腰中點連線（八年級的只出面積；中點連線跟著地圖放九年級相似形） */
+  /* 梯形面積與兩腰中點連線（都是八年級：S-8-11，課本放在八下四邊形的梯形小節） */
   function gTrapezoid() {
     var a = 2 + ri(7), b = a + 2 * (1 + ri(4)), h = 2 * (1 + ri(5));
     if (ri(2)) {
@@ -1347,7 +1347,7 @@
         [String((a + b) * h), String(a * b * h / 2), String(b * h), String((a + b) / 2)],
         "梯形面積 $=\\dfrac{(上底+下底)\\times高}{2}=\\dfrac{(" + a + "+" + b + ")\\times" + h + "}{2}$");
     }
-    return mk("geo", "similar.sim", 9,
+    return mk("geo", "quad.trap", 8,
       "梯形的上底 $" + a + "$、下底 $" + b + "$，兩腰中點的連線長 = ?", String((a + b) / 2),
       [String(a + b), String((b - a) / 2), String(b - a)],
       "兩腰中點連線長 $=\\dfrac{上底+下底}{2}=\\dfrac{" + a + "+" + b + "}{2}$，而且平行於兩底");
@@ -1455,7 +1455,7 @@
       { f: gEquilateral,   w: 1, ts: ["angle.tri"] },
       { f: gInRadius,      w: 1, ts: ["angle.center"] },
       { f: gPointCircle,   w: 1, ts: ["circle.tangent"] },
-      { f: gTrapezoid,     w: 2, ts: ["quad.trap", "similar.sim"] }
+      { f: gTrapezoid,     w: 2, ts: ["quad.trap"] }
     ]
   };
   var STATICS = { keyword: KEYWORD, formula: FORMULA, geo: GEO };

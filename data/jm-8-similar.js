@@ -154,14 +154,6 @@ TM({
           t: "把 $\\overline{MN}$ 寫成 $\\overline{BC}$ 的兩倍。"
         },
         {
-          n: "梯形兩腰中點連線",
-          f: "\\overline{MN}=\\frac{\\text{上底}+\\text{下底}}{2}",
-          w: "已知兩底求兩腰中點的連線長，或已知連線長與一底求另一底。",
-          l: "連的是「兩腰的中點」，且平行於兩底（舊教材稱為梯形的中線）。108 課綱把它列在八年級的梯形性質（S-8-11）；這份地圖依課本常見的編排，和三角形兩邊中點連線一起放在九上相似形。",
-          fig: "trap-midseg",
-          t: "把連線長寫成兩底相減的一半。"
-        },
-        {
           n: "平行線截比例線段",
           f: "\\overline{DE}\\parallel\\overline{BC} \\Rightarrow \\frac{\\overline{AD}}{\\overline{DB}}=\\frac{\\overline{AE}}{\\overline{EC}}",
           w: "三角形內有一條平行線時，馬上得到比例關係。",
