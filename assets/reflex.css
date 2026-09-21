@@ -397,3 +397,9 @@ table.rx-rec td.rec-scope { font-size: .82rem; color: var(--ink-soft); }
   .ps-name { display: inline-block; }
   .ps-chip { font-size: .78rem; padding: 3px 9px; }
 }
+
+/* 補充題開關與標記 */
+.rx-ext{display:flex;gap:8px;align-items:flex-start;margin:10px 2px 0;padding:9px 12px;border-radius:10px;
+  font-size:.9rem;line-height:1.55;color:#6b4a10;background:#fdf6e3;border:1px dashed #e0c070;cursor:pointer}
+.rx-ext input{margin-top:4px;flex:none}
+.q-ext{color:#8a5a12;background:#fdf0d2;border:1px solid #e8c77e;border-radius:999px;padding:0 7px;font-size:.78em}

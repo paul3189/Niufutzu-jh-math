@@ -82,7 +82,7 @@
   function diffOf(id) { return DIFFS.filter(function (d) { return d.id === id; })[0] || DIFFS[2]; }
 
   var G = null;
-  var sel = { diff: "s10", cats: null, scope: "all", grade: 7, topics: [] };
+  var sel = { diff: "s10", cats: null, scope: "all", grade: 7, topics: [], ext: false };
 
   function currentSet() {
     return REFLEX_BANK.scopeSet(sel.scope, sel.scope === "grade" ? sel.grade : sel.topics);
@@ -104,6 +104,7 @@
 
   /* ══════════ 選單 ══════════ */
   function buildMenu() {
+    REFLEX_BANK.setIncludeExt(sel.ext);      /* 要在算單元清單之前設定 */
     var cats = REFLEX_BANK.cats;
     var topicList = REFLEX_BANK.topics();
     if (!sel.cats) sel.cats = cats.map(function (c) { return c.id; });
@@ -149,7 +150,7 @@
       pick.innerHTML = '<label>年級：</label><span id="gradeBtns"></span>';
       var gb = $("gradeBtns");
       REFLEX_BANK.grades.forEach(function (g) {
-        var n = topicList.filter(function (t) { return t.g === g; }).length;
+        var n = topicList.filter(function (t) { return t.gs.indexOf(g) >= 0; }).length;
         var b = document.createElement("button");
         b.type = "button";
         b.className = "rx-grade" + (sel.grade === g ? " on" : "");
@@ -174,8 +175,9 @@
           '" data-dom="' + di + '">' + d0.name + '</button><div class="ps-chips">' +
           d0.items.map(function (t) {
             return '<button type="button" class="ps-chip' + (sel.topics.indexOf(t.id) >= 0 ? " on" : "") +
-              '" data-id="' + t.id + '" title="' + REFLEX_BANK.gradeName[t.g] + '．' + t.num +
-              ' 種題源">' + t.n + '<small>' + t.g + '</small></button>';
+              '" data-id="' + t.id + '" title="' +
+              t.gs.map(function (x) { return REFLEX_BANK.gradeName[x]; }).join("・") + '．' + t.num +
+              ' 種題源">' + t.n + '<small>' + t.gs.join("・") + '</small></button>';
           }).join("") + '</div></div>';
       });
       pick.innerHTML = html;
@@ -207,6 +209,15 @@
           buildMenu();
         });
       });
+    }
+
+    /* 補充題開關：超出 108 課綱國中範圍的題目預設不出 */
+    var ex = $("extToggle");
+    if (ex) {
+      ex.innerHTML = '<label class="rx-ext"><input type="checkbox" id="extChk"' + (sel.ext ? " checked" : "") +
+        '> 包含<b>補充題</b>（超出 108 課綱國中範圍：錐體體積、兩圓位置關係、相似立體體積比…，共 ' +
+        REFLEX_BANK.extCount() + ' 種題源）</label>';
+      $("extChk").addEventListener("change", function () { sel.ext = this.checked; buildMenu(); });
     }
 
     /* 題型 */
@@ -285,6 +296,7 @@
 
   /* ══════════ 開場 ══════════ */
   function startGame() {
+    REFLEX_BANK.setIncludeExt(sel.ext);
     var d = diffOf(sel.diff);
     var set = currentSet();
     var use = effectiveCats(REFLEX_BANK.availableCats(set));
@@ -368,7 +380,8 @@
     var cat = catOf(it.cat);
 
     $("qCat").innerHTML = cat.icon + " " + cat.name +
-      '<span class="q-ch">' + REFLEX_BANK.shortOf(it.t) + '｜' + REFLEX_BANK.gradeName[it.g] + '</span>';
+      '<span class="q-ch">' + REFLEX_BANK.shortOf(it.t) + '｜' + REFLEX_BANK.gradeName[it.g] +
+      (it.ext ? '｜<b class="q-ext">補充</b>' : "") + '</span>';
     $("qText").innerHTML = it.q;
     var cw = $("choices");
     cw.innerHTML = "";

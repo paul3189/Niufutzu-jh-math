@@ -53,6 +53,12 @@
     return l.map(function (x) { return GRADE_NAME[x] || ("G" + x); }).join("・");
   }
 
+  /* 「補充」標籤：工具有 ext 欄位（寫明課綱依據）就代表它超出 108 課綱國中範圍。
+   * 內容照樣保留，只是每個出現的地方都掛一個標籤，讓學生知道「這張不是必考」。 */
+  function extChip(tool) {
+    return tool && tool.ext ? '<span class="ext-chip" title="超出 108 課綱國中範圍的補充內容">補充</span>' : "";
+  }
+
   /* 目前年級下可用的領域清單（所有渲染函式都用它，不要直接用 TOOLMAP.domains） */
   function domains() {
     var all = (window.TOOLMAP && TOOLMAP.domains) || [];
@@ -267,6 +273,7 @@
     d.querySelector("#dwTitle").innerHTML =
       esc(tool.n) +
       (tool.g ? '<span class="g-chip">' + esc(gradeTag(tool.g)) + "</span>" : "") +
+      extChip(tool) +
       (path ? '<div class="h-p" style="font-weight:400">' + esc(path) + "</div>" : "");
     var html =
       (tool.fig ? '<div class="dw-sec">' + figHTML(tool.fig, "fig-lg") + "</div>" : "") +
@@ -279,7 +286,8 @@
       // 「常見錯誤」配一隻瞪大眼睛的牛夫子，讓最該記住的那一欄最醒目
       sec("lab-t", "常見錯誤",
         tool.t ? '<img class="cow-mini" src="assets/mascot/web/cow_float.png" alt="瞪大眼睛的牛夫子">' + esc(tool.t) : "") +
-      sec("lab-x", "延伸連結", esc(tool.x));
+      sec("lab-x", "延伸連結", esc(tool.x)) +
+      sec("lab-ext", "課綱範圍（補充內容）", esc(tool.ext));
     var body = d.querySelector("#dwBody");
     body.innerHTML = html || '<p class="dw-txt">（此節點為分類，點它下面的葉節點看工具細節）</p>';
     if (window.renderMathInElement) {
@@ -421,7 +429,9 @@
         children: (dom.topics || []).map(function (t) {
           return {
             label: t.n, color: dom.color, _t: t,
-            children: (t.tools || []).map(function (tool) { return { label: tool.n, _t: t, _tool: tool }; })
+            children: (t.tools || []).map(function (tool) {
+              return { label: tool.n + (tool.ext ? "（補充）" : ""), _t: t, _tool: tool };
+            })
           };
         })
       };
@@ -463,7 +473,7 @@
           t.tools.map(function (tool, xi) {
             return '<button class="lv-tool" data-t="' + ti + '" data-x="' + xi + '">' +
               (tool.fig ? '<span class="lv-thumb">' + figSVG(tool.fig) + "</span>" : "") +
-              "<b>" + esc(tool.n) + "</b>" +
+              "<b>" + esc(tool.n) + extChip(tool) + "</b>" +
               (tool.w ? "<span>👉 " + esc(tool.w) + "</span>" : "") + "</button>";
           }).join("") + "</div></details>";
       }).join("") + "</div>";
@@ -486,7 +496,7 @@
         if (!q) return;
         var keys = q.split(/[\s,，、]+/).filter(Boolean);
         var hits = data.filter(function (r) {
-          var hay = [r.tool.n, r.tool.d, r.tool.w, r.tool.f, r.tool.l, r.tool.t, r.topic.n,
+          var hay = [r.tool.n, r.tool.d, r.tool.w, r.tool.f, r.tool.l, r.tool.t, r.tool.ext ? "補充 超綱" : "", r.topic.n,
             (r.topic.kw || []).join(" "), r.dom.n].join(" ");
           return keys.every(function (k) { return hay.indexOf(k) > -1; });
         }).slice(0, 40);
@@ -501,7 +511,7 @@
           div.style.borderLeftColor = r.dom.color;
           div.innerHTML =
             (r.tool.fig ? '<span class="hit-thumb">' + figSVG(r.tool.fig) + "</span>" : "") +
-            '<span class="hit-main"><span class="h-t">' + esc(r.tool.n) + "</span>" +
+            '<span class="hit-main"><span class="h-t">' + esc(r.tool.n) + extChip(r.tool) + "</span>" +
             '<span class="h-p">' + esc(r.dom.icon + " " + r.dom.n + " ▸ " + r.topic.n) + "</span>" +
             (r.tool.w ? '<span class="h-w">👉 ' + esc(r.tool.w) + "</span>" : "") + "</span>";
           div.addEventListener("click", function () { openTool(r.tool, r.dom.n + " ▸ " + r.topic.n); });
@@ -541,7 +551,7 @@
           return '<button class="fig-card' + (x.fig && figWide(x.fig) ? " wide" : "") +
             '" data-t="' + ti + '" data-x="' + xi + '">' +
             '<span class="fc-fig">' + (x.fig ? figSVG(x.fig) : '<span class="fc-nofig">（無圖）</span>') + "</span>" +
-            '<span class="fc-n">' + esc(x.n) + "</span>" +
+            '<span class="fc-n">' + esc(x.n) + extChip(x) + "</span>" +
             (x.d ? '<span class="fc-d">📖 定義：' + esc(x.d) + "</span>" : "") +
             (x.w ? '<span class="fc-w">👉 ' + esc(x.w) + "</span>" : "") +
             (x.l ? '<span class="fc-l">⚠️ ' + esc(x.l) + "</span>" : "") +
@@ -591,7 +601,7 @@
         var rows = (t.tools || []).map(function (x) {
           return "<tr>" +
             (hasFig ? "<td class='t-fig' data-l='圖'>" + (x.fig ? figSVG(x.fig) : "—") + "</td>" : "") +
-            "<td class='t-n' data-l='工具'>" + esc(x.n) +
+            "<td class='t-n' data-l='工具'>" + esc(x.n) + extChip(x) +
             "</td><td data-l='" + (x.d ? "定義與性質" : "公式") + "'>" +
             (x.d ? "<span class='t-def'>【定義】" + esc(x.d) + "</span>" : "") +
             (x.f ? "$" + esc(x.f) + "$" : (x.d ? "" : "—")) +
@@ -630,7 +640,7 @@
               '" data-d="' + d.id + '" data-t="' + t.id +
               '" data-n="' + esc(x.n) + '">' +
               '<span class="fc-fig">' + figSVG(x.fig) + "</span>" +
-              '<span class="fc-n">' + esc(x.n) + "</span></button>";
+              '<span class="fc-n">' + esc(x.n) + extChip(x) + "</span></button>";
           }).join("");
           if (!cards) return "";
           return '<h3 class="topic-h"><span style="color:' + d.color + '">▍' + esc(t.n) + "</span>" +

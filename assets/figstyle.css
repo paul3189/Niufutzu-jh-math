@@ -110,3 +110,10 @@ table.tools td.t-fig svg { width: 100%; }
   .fig-card { break-inside: avoid; box-shadow: none; }
   .gal-nav { display: none; }
 }
+
+/* 「補充」標籤：超出 108 課綱國中範圍、但仍保留的內容 */
+.ext-chip{display:inline-block;margin-left:6px;padding:1px 7px;border-radius:999px;
+  font-size:11px;font-weight:700;line-height:1.5;vertical-align:middle;white-space:nowrap;
+  color:#8a5a12;background:#fdf0d2;border:1px solid #e8c77e}
+.dw-lab.lab-ext{color:#8a5a12;background:#fdf0d2}
+@media print{.ext-chip{border-color:#999;color:#333;background:none}}
