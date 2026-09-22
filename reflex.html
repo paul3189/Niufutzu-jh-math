@@ -54,7 +54,10 @@
   <div class="rx-sec">👾 怪物陣容 <small>三隻輪流出場，打完一輪血量再往上加</small></div>
   <div id="lineup" class="rx-lineup"></div>
 
-  <div class="rx-sec">🏆 個人最佳紀錄</div>
+  <div id="cloudAccount"></div>
+  <div id="cloudBoard"></div>
+
+  <div class="rx-sec">🏆 個人最佳紀錄 <small>存在這台裝置的瀏覽器裡</small></div>
   <div id="records"></div>
   <div id="lifetime"></div>
 
@@ -142,6 +145,9 @@
 <script src="data/jm-9-solid.js"></script>
 <script src="data/jm-10-stat.js"></script>
 <script src="data/reflex-bank.js"></script>
+<!-- 雲端（Email 登入＋排行榜）：沒設定 FIREBASE_CONFIG 時自動隱藏 -->
+<script src="assets/firebase-config.js"></script>
+<script src="assets/reflex-cloud.js"></script>
 <script src="assets/reflex.js"></script>
 </body>
 </html>

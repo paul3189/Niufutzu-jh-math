@@ -6,6 +6,7 @@
   "use strict";
 
   var STORE = "jhmath.reflex.v1";
+  var $ = function (id) { return document.getElementById(id); };
   var TOTAL = 10;
   var MAX_HP = 5;
 
@@ -65,7 +66,6 @@
     over: function () { [440, 350, 260].forEach(function (f, i) { setTimeout(function () { beep(f, 0.25, "sine", 0.06); }, i * 180); }); }
   };
 
-  function $(id) { return document.getElementById(id); }
   function rm(el) {
     if (window.renderMathInElement) {
       renderMathInElement(el, {
@@ -292,6 +292,159 @@
       }).join("");
     }
     rm(cw);
+  }
+
+  /* ══════════ 雲端：帳號與排行榜 ══════════
+   * 全部透過 window.ReflexCloud；它不存在或 ready=false 時這一段什麼都不畫。 */
+  var C = window.ReflexCloud || null;
+  var cloudOn = false;
+  var boardSel = { kind: "week", diff: null };
+  var boardCache = {};
+
+  function esc(s) {
+    return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+    });
+  }
+
+  function renderAccount() {
+    var box = $("cloudAccount");
+    if (!box || !cloudOn) return;
+    var u = C.user(), nick = C.nick();
+    var html = '<div class="rx-sec">👤 帳號 <small>登入後成績會上榜；排行榜只顯示暱稱，不會出現 Email</small></div>';
+    if (!u) {
+      var remembered = C.rememberedEmail();
+      html += '<div class="rx-cloud">' +
+        '<div class="cl-row"><input type="email" id="clEmail" placeholder="你的 Email" value="' + esc(remembered) + '" autocomplete="email">' +
+        '<button type="button" id="clSend">寄登入連結給我</button>' +
+        (C.mode() === "mock" ? '<button type="button" id="clMock">（測試）直接登入</button>' : "") + '</div>' +
+        '<div class="cl-note" id="clMsg">不用設密碼：輸入 Email 會收到一封信，點信裡的連結就登入了（用同一台裝置開信最順）。</div></div>';
+      box.innerHTML = html;
+      $("clSend").addEventListener("click", sendLink);
+      $("clEmail").addEventListener("keydown", function (e) { if (e.key === "Enter") { e.preventDefault(); sendLink(); } });
+      if ($("clMock")) $("clMock").addEventListener("click", function () { C.mockLogin(); });
+      return;
+    }
+    html += '<div class="rx-cloud">' +
+      '<div class="cl-row"><span class="cl-who">✅ 已登入　<span class="cl-mail">' + esc(u.email) + '</span></span>' +
+      '<button type="button" class="cl-out" id="clOut">登出</button></div>' +
+      '<div class="cl-row"><label for="clNick">暱稱</label>' +
+      '<input type="text" id="clNick" maxlength="12" placeholder="排行榜上顯示的名字（1～12 字）" value="' + esc(nick) + '">' +
+      '<button type="button" id="clNickSave">' + (nick ? "改暱稱" : "設定暱稱") + '</button></div>' +
+      '<div class="cl-note" id="clMsg">' + (nick ? "" : "⚠ 先設定暱稱，成績才會上榜。") + '</div></div>';
+    box.innerHTML = html;
+    $("clOut").addEventListener("click", function () { C.signOut(); });
+    $("clNickSave").addEventListener("click", saveNick);
+    $("clNick").addEventListener("keydown", function (e) { if (e.key === "Enter") { e.preventDefault(); saveNick(); } });
+  }
+  function sendLink() {
+    var email = ($("clEmail").value || "").trim().toLowerCase();
+    if (!C.validEmail(email)) { $("clMsg").textContent = "Email 格式不對，再看一下。"; return; }
+    $("clSend").disabled = true;
+    $("clMsg").textContent = "寄送中…";
+    C.sendLink(email).then(function () {
+      $("clMsg").innerHTML = "📨 已寄到 <b>" + esc(email) + "</b>。打開那封信、點裡面的連結就會回到這裡並登入。沒收到請看垃圾信匣。";
+    }).catch(function (e) {
+      $("clSend").disabled = false;
+      $("clMsg").textContent = "寄送失敗：" + friendly(e);
+    });
+  }
+  function saveNick() {
+    var n = C.cleanNick($("clNick").value);
+    if (!n) { $("clMsg").textContent = "暱稱不能是空的（1～12 字）。"; return; }
+    $("clNickSave").disabled = true;
+    C.setNick(n).then(function () {
+      boardCache = {};
+      renderAccount(); renderBoard();
+    }).catch(function (e) { $("clNickSave").disabled = false; $("clMsg").textContent = "儲存失敗：" + friendly(e); });
+  }
+  function friendly(e) {
+    var m = (e && e.code) || (e && e.message) || String(e);
+    if (/unauthorized-domain/.test(m)) return "這個網域還沒加進 Firebase 的「已授權網域」。";
+    if (/invalid-email/.test(m)) return "Email 格式不對。";
+    if (/too-many-requests/.test(m)) return "寄太頻繁了，等一下再試。";
+    if (/permission-denied/.test(m)) return "沒有權限（安全規則擋下來了）。";
+    if (/network/.test(m)) return "網路連不上。";
+    return m;
+  }
+
+  function renderBoard() {
+    var box = $("cloudBoard");
+    if (!box || !cloudOn) return;
+    if (!boardSel.diff) boardSel.diff = sel.diff;
+    var html = '<div class="rx-sec">🏆 排行榜 <small>每個難度一個榜；本週榜每週一重新開始，總榜是歷史最高分</small></div>' +
+      '<div class="rx-cloud"><div class="bd-tabs">' +
+      '<span class="bd-kind"><button type="button" data-k="week"' + (boardSel.kind === "week" ? ' class="on"' : "") + '>本週榜</button>' +
+      '<button type="button" data-k="all"' + (boardSel.kind === "all" ? ' class="on"' : "") + '>總榜</button></span>' +
+      '<span class="bd-diff">' + DIFFS.map(function (d) {
+        return '<button type="button" data-d="' + d.id + '"' + (boardSel.diff === d.id ? ' class="on"' : "") + '>' + d.sec + ' 秒<small>' + d.name + '</small></button>';
+      }).join("") + '</span></div><div id="bdBody" class="bd-body">載入中…</div></div>';
+    box.innerHTML = html;
+    box.querySelectorAll(".bd-kind button").forEach(function (b) {
+      b.addEventListener("click", function () { boardSel.kind = b.getAttribute("data-k"); renderBoard(); });
+    });
+    box.querySelectorAll(".bd-diff button").forEach(function (b) {
+      b.addEventListener("click", function () { boardSel.diff = b.getAttribute("data-d"); renderBoard(); });
+    });
+    var key = boardSel.kind + "|" + boardSel.diff;
+    var p = boardCache[key] || (boardCache[key] = C.board(boardSel.kind, boardSel.diff));
+    p.then(function (r) {
+      if (key !== boardSel.kind + "|" + boardSel.diff) return;
+      paintBoard(r);
+    }).catch(function (e) {
+      delete boardCache[key];
+      $("bdBody").innerHTML = '<div class="rx-none">排行榜載入失敗：' + esc(friendly(e)) + '</div>';
+    });
+  }
+  function paintBoard(r) {
+    var rows = r.rows || [];
+    var me = r.myUid;
+    var inTop = rows.some(function (x) { return x.uid === me; });
+    var html = !rows.length ? '<div class="rx-none">這個榜還沒有人上榜——打一場就是第一名！</div>' :
+      '<table class="bd-tbl"><tr><th>名次</th><th>暱稱</th><th>分數</th><th>正確率</th><th>連擊</th><th>範圍</th></tr>' +
+      rows.map(function (x, i) {
+        var medal = i === 0 ? "🥇" : i === 1 ? "🥈" : i === 2 ? "🥉" : (i + 1);
+        return '<tr' + (x.uid === me ? ' class="me"' : "") + '><td>' + medal + '</td><td>' + esc(x.nick) +
+          (x.uid === me ? '<span class="bd-me">我</span>' : "") + '</td><td class="bd-s">' + x.score + '</td><td>' + x.acc + '%</td><td>' + x.combo + '</td><td class="bd-sc">' + esc(x.scope) + '</td></tr>';
+      }).join("") + '</table>';
+    if (me && r.me && !inTop) html += '<div class="cl-note">你在這個榜的最佳是 <b>' + r.me.score + '</b> 分，還沒進前 ' + rows.length + ' 名，再衝！</div>';
+    if (!me) html += '<div class="cl-note">登入並設定暱稱後，你的成績也會出現在這裡。</div>';
+    $("bdBody").innerHTML = html;
+  }
+
+  /* 結算後上傳；回傳要塞進結算畫面的那一段 HTML（用 Promise） */
+  function cloudSubmit(run) {
+    if (!cloudOn) return Promise.resolve("");
+    var u = C.user();
+    if (!u) return Promise.resolve('<div class="rx-cloud end"><b>☁️ 這一場沒有上榜</b>：回選單用 Email 登入，之後的成績就會進排行榜。</div>');
+    if (!C.nick()) return Promise.resolve('<div class="rx-cloud end"><b>☁️ 這一場沒有上榜</b>：回選單設定暱稱，之後的成績就會進排行榜。</div>');
+    return C.submit(run).then(function (r) {
+      boardCache = {};
+      renderBoard();                       /* 選單雖然還沒顯示，先把榜更新好 */
+      function line(name, x) {
+        var where = x.rank ? "第 <b>" + x.rank + "</b> 名" : "前 100 名之外";
+        return "<div>" + name + "：" + where + (x.improved ? '<span class="bd-new">刷新個人最佳！</span>' : "（個人最佳 " + x.best + " 分）") + "</div>";
+      }
+      return '<div class="rx-cloud end"><b>☁️ 成績已上傳</b>' + line("本週榜", r.week) + line("總榜", r.all) + '</div>';
+    }).catch(function (e) {
+      return '<div class="rx-cloud end"><b>☁️ 上傳失敗</b>：' + esc(friendly(e)) + '（本機紀錄已存）</div>';
+    });
+  }
+
+  function bootCloud() {
+    if (!C || !C.ready) return;
+    C.ready.then(function (ok) {
+      cloudOn = ok;
+      if (!ok) return;
+      C.onAuth(function () { boardCache = {}; renderAccount(); renderBoard(); });
+      /* 從登入信的連結回來 */
+      C.finishLink().then(function (r) {
+        if (r === "need-email") {
+          var email = prompt("請輸入你收到登入連結的那個 Email：");
+          if (email) C.finishLink(email.trim().toLowerCase()).catch(function (e) { alert("登入失敗：" + friendly(e)); });
+        }
+      }).catch(function (e) { alert("登入失敗：" + friendly(e) + "\n連結可能已過期，請重新寄一封。"); });
+    });
   }
 
   /* ══════════ 開場 ══════════ */
@@ -621,6 +774,14 @@
 
     rm($("endBody"));
     show("scrEnd");
+
+    /* 雲端上傳（有登入才會真的傳）；結果補在分數下面 */
+    var slot = document.createElement("div");
+    slot.id = "cloudResult";
+    var head = $("endBody").querySelector(".rx-end-head");
+    head.parentNode.insertBefore(slot, head.nextSibling);
+    cloudSubmit({ diff: G.d.id, score: G.score, acc: acc, combo: G.maxCombo, avg: avg, scope: G.scope })
+      .then(function (html) { slot.innerHTML = html; });
   }
 
   /* ══════════ 鍵盤 ══════════ */
@@ -660,5 +821,6 @@
       else { G.locked = true; buildMenu(); show("scrMenu"); }
     });
     buildMenu();
+    bootCloud();
   });
 })();

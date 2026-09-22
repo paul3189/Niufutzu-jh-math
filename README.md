@@ -114,6 +114,19 @@
 單元名稱以工具地圖為準（`reflex.html` 會先載入 `data/jm-*.js`，題庫自動對名稱、對不上會在 console 警告）；
 年級寫在每一題自己身上，選「七年級」就只會出七年級的題，即使那個單元橫跨兩個年級。
 
+## 直覺道場的帳號與排行榜（Firebase）
+
+學生用 **Email 登入**（免密碼：收信點連結），成績會上傳到雲端，排行榜**只顯示暱稱**。
+每個難度（20/15/10/5/3 秒）各一個榜，分「本週榜」（每週一重新開始）與「總榜」（歷史最高分）。
+
+- 設定步驟：`firebase/SETUP.md`（約 10 分鐘，全部在 Firebase 主控台點）
+- 安全規則：`firebase/firestore.rules`（誰都能看榜；只能寫自己的一筆、分數只能往上；每場紀錄學生讀不到）
+- 前端：`assets/reflex-cloud.js`（唯一碰 Firebase 的檔案）＋ `assets/firebase-config.js`（貼 firebaseConfig 的地方）
+- `FIREBASE_CONFIG` 是 `null` 時，道場照常可玩，帳號與排行榜整段不出現；網址加 `?cloud=mock` 用假資料看畫面
+
+榜的集合名稱把難度和週編進去（`boards/all_s10`、`boards/w2026-39_s10`），查詢只排序一個欄位，
+不用建複合索引。老師在 Firestore 的 `runs` 看每一場、`users` 看 Email 與暱稱的對照。
+
 ## 視覺：牛夫子
 
 整份地圖以**牛夫子**（圖文作者：楊安琪）為主角。色票直接取自角色本身——
