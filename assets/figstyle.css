@@ -26,7 +26,9 @@ table.tools td .katex-display > .katex { text-align: left; }
 
 /* ── 圖的通用容器 ── */
 .fig { display: flex; justify-content: center; align-items: center; }
-.fig svg, .fig-card svg, .lv-thumb svg, .hit-thumb svg, table.tools td.t-fig svg {
+/* 只能選到「幾何圖」那個 svg（直接子元素）。KaTeX 的根號、長箭頭本身也是小 svg，
+   如果寫成 .fig-card svg 會連它們一起套上 height:auto / display:block，根號就不見了。 */
+.fig > svg, .fig-card .fc-fig > svg, .lv-thumb > svg, .hit-thumb > svg, table.tools td.t-fig > svg {
   max-width: 100%; height: auto; display: block;
 }
 .fig.fig-lg {
