@@ -41,6 +41,10 @@
     return String(s || "").replace(/[<>&"'\u0000-\u001f]/g, "").trim().slice(0, 12);
   }
   function validEmail(s) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(s); }
+  /* 第一次登入自動給一個暱稱（Email 的 @ 前面那一段），學生不設定也能上榜；之後隨時可以改。 */
+  function defaultNick(email) {
+    return cleanNick(String(email || "").split("@")[0]) || "牛夫子學徒";
+  }
 
   var listeners = [];
   var state = { user: null, nick: "", mode: null };
@@ -82,7 +86,7 @@
       finishLink: function () { return Promise.resolve(false); },
       mockLogin: function () {
         state.user = { uid: uid, email: api.rememberedEmail() || "me@example.com" };
-        state.nick = db.users[uid] ? db.users[uid].nick : "";
+        state.nick = (db.users[uid] && db.users[uid].nick) || defaultNick(state.user.email);
         emit();
       },
       signOut: function () { state.user = null; state.nick = ""; emit(); return Promise.resolve(); },
@@ -130,9 +134,14 @@
     function userDoc(uid) { return F.doc(fs, "users", uid); }
     function entryDoc(id, uid) { return F.doc(fs, "boards", id, "entries", uid); }
 
+    /* 讀暱稱；第一次登入（還沒有 users 文件）就自動建一個，成績才不會因為沒暱稱而不上傳 */
     function loadNick(u) {
       return F.getDoc(userDoc(u.uid)).then(function (s) {
-        state.nick = s.exists() ? (s.data().nick || "") : "";
+        var n = s.exists() ? (s.data().nick || "") : "";
+        if (n) { state.nick = n; return; }
+        n = defaultNick(u.email);
+        return F.setDoc(userDoc(u.uid), { nick: n, email: u.email, updatedAt: F.serverTimestamp() }, { merge: true })
+          .then(function () { state.nick = n; });
       }).catch(function () { state.nick = ""; });
     }
 

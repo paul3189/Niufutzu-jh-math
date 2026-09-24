@@ -318,7 +318,7 @@
         '<div class="cl-row"><input type="email" id="clEmail" placeholder="你的 Email" value="' + esc(remembered) + '" autocomplete="email">' +
         '<button type="button" id="clSend">寄登入連結給我</button>' +
         (C.mode() === "mock" ? '<button type="button" id="clMock">（測試）直接登入</button>' : "") + '</div>' +
-        '<div class="cl-note" id="clMsg">不用設密碼：輸入 Email 會收到一封信，點信裡的連結就登入了（用同一台裝置開信最順）。</div></div>';
+        '<div class="cl-note" id="clMsg">不用設密碼：輸入 Email 會收到一封信，點信裡的連結就登入了（用同一台裝置開信最順）。<b>只要收這一次信</b>——之後在這台裝置、這個瀏覽器會一直保持登入。</div></div>';
       box.innerHTML = html;
       $("clSend").addEventListener("click", sendLink);
       $("clEmail").addEventListener("keydown", function (e) { if (e.key === "Enter") { e.preventDefault(); sendLink(); } });
@@ -331,7 +331,7 @@
       '<div class="cl-row"><label for="clNick">暱稱</label>' +
       '<input type="text" id="clNick" maxlength="12" placeholder="排行榜上顯示的名字（1～12 字）" value="' + esc(nick) + '">' +
       '<button type="button" id="clNickSave">' + (nick ? "改暱稱" : "設定暱稱") + '</button></div>' +
-      '<div class="cl-note" id="clMsg">' + (nick ? "" : "⚠ 先設定暱稱，成績才會上榜。") + '</div></div>';
+      '<div class="cl-note" id="clMsg">這台裝置會一直保持登入，下次來不必再收信；按「登出」或換 Email 才需要重新登入。</div></div>';
     box.innerHTML = html;
     $("clOut").addEventListener("click", function () { C.signOut(); });
     $("clNickSave").addEventListener("click", saveNick);
@@ -417,7 +417,7 @@
     if (!cloudOn) return Promise.resolve("");
     var u = C.user();
     if (!u) return Promise.resolve('<div class="rx-cloud end"><b>☁️ 這一場沒有上榜</b>：回選單用 Email 登入，之後的成績就會進排行榜。</div>');
-    if (!C.nick()) return Promise.resolve('<div class="rx-cloud end"><b>☁️ 這一場沒有上榜</b>：回選單設定暱稱，之後的成績就會進排行榜。</div>');
+    if (!C.nick()) return Promise.resolve('<div class="rx-cloud end"><b>☁️ 這一場沒有上榜</b>：暱稱還沒設定好，回選單看一下「👤 帳號」。</div>');
     return C.submit(run).then(function (r) {
       boardCache = {};
       renderBoard();                       /* 選單雖然還沒顯示，先把榜更新好 */
