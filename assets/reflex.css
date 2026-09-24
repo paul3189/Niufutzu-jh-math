@@ -442,3 +442,9 @@ table.rx-rec td.rec-scope { font-size: .82rem; color: var(--ink-soft); }
   .bd-tbl:not(.sum) th:nth-child(5),.bd-tbl:not(.sum) td:nth-child(5),
   .bd-tbl:not(.sum) th:nth-child(7),.bd-tbl:not(.sum) td:nth-child(7){display:none}
 }
+
+/* 看圖反射：題目裡的幾何圖 */
+.q-fig{background:#fff;border:1px solid var(--line);border-radius:12px;padding:6px;margin:0 auto 10px;max-width:340px}
+.q-fig > svg{width:100%;height:auto;display:block}
+.q-ask{font-size:1.02rem;line-height:1.6}
+@media (max-width:560px){.q-fig{max-width:100%}}

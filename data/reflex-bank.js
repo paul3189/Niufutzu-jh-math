@@ -80,7 +80,9 @@
     { id: "geo",     name: "圖形性質",   icon: "📐", timeMul: 1.15,
       desc: "性質與判別法：知道它是什麼就能用什麼" },
     { id: "graph",   name: "坐標與函數", icon: "📈", timeMul: 1.15,
-      desc: "象限、直線圖形、拋物線的直覺" }
+      desc: "象限、直線圖形、拋物線的直覺" },
+    { id: "figure",  name: "看圖反射",   icon: "👁️", timeMul: 1.5,
+      desc: "看到這張圖，手要自動往哪個方向動" }
   ];
 
   /* ────────── 單元表（對應 data/jm-*.js 的 領域.主題） ────────── */
@@ -1416,6 +1418,103 @@
       "例：$360=2^3\\times3^2\\times5$；1 不是質數，不會出現在分解式裡"]
   ]);
 
+  /* ══════════════ 七、看圖反射（手寫．每題配一張圖） ══════════════
+   * 圖在 data/figs.js（qf-* 那一組），上面只有頂點字母與刻度，沒有任何文字提示。
+   * 練的是「看到這個配置，第一個動作是什麼」——不是算出答案，是選對要動的那一步。
+   * 格式：[單元id, 年級, 圖id, 問句, 正解, [三個誘答], 理由]
+   */
+  var FIGURE = [
+    ["similar.sim", 9, "qf-parallel-de", "圖中 DE ∥ BC。第一個動作是？",
+      "認出 A 字型：$\\triangle ADE\\sim\\triangle ABC$",
+      ["認出 $\\triangle ADE\\cong\\triangle ABC$（全等）", "先用畢氏定理把 DE 算出來", "先證 D、E 分別是兩邊的中點"],
+      "共用頂角 A ＋ 同位角相等 → AA 相似。比例式要固定同一個三角形在分子"],
+    ["similar.sim", 9, "qf-cross-x", "圖中 AB ∥ DC。第一個動作是？",
+      "認出 X 字型：$\\triangle OAB\\sim\\triangle OCD$",
+      ["對應順序寫成 $\\triangle OAB\\sim\\triangle OCD$ 以外的配法", "兩個三角形全等", "用畢氏定理求 AB"],
+      "對頂角相等 ＋ 內錯角相等 → AA。對應是 A↔C、B↔D（隔著交點正對面那個）"],
+    ["similar.sim", 9, "qf-alt-right", "直角三角形斜邊上的高 CH。第一個動作是？",
+      "認出母子型：$\\overline{CH}^2=\\overline{AH}\\cdot\\overline{HB}$",
+      ["高等於兩段之和：$\\overline{CH}=\\overline{AH}+\\overline{HB}$", "H 是 AB 的中點，所以兩段一樣長", "$\\overline{CH}$ 是 $\\angle C$ 的角平分線"],
+      "△ACH ∼ △CBH ∼ △ABC；高的平方＝被分成的兩段相乘"],
+    ["similar.sim", 9, "qf-common-angle", "圖中 $\\angle ADE=\\angle ACB$。第一個動作是？",
+      "認出共角型：$\\overline{AD}\\cdot\\overline{AB}=\\overline{AE}\\cdot\\overline{AC}$",
+      ["DE ∥ BC", "$\\overline{AD}\\cdot\\overline{AE}=\\overline{AB}\\cdot\\overline{AC}$", "兩個三角形全等"],
+      "共用 ∠A ＋ 一組角相等 → △ADE ∼ △ACB（交叉對應），交叉相乘就得到這個乘積關係"],
+    ["circle.angle", 9, "qf-diameter", "AB 是直徑，C 在圓上。第一個動作是？",
+      "把 $\\angle ACB=90^\\circ$ 標出來",
+      ["把 $\\angle ACB$ 標成 $180^\\circ$", "$\\overline{CA}=\\overline{CB}$，C 一定在正上方", "$\\overline{OC}$ 會垂直 $\\overline{AB}$"],
+      "半圓所對的圓周角是直角；標出直角後通常接畢氏定理"],
+    ["circle.angle", 9, "qf-cyclic", "四個頂點都在圓上。第一個動作是？",
+      "用對角互補：$\\angle A+\\angle C=180^\\circ$",
+      ["用鄰角互補：$\\angle A+\\angle B=180^\\circ$", "四個內角都相等，各 $90^\\circ$", "兩條對角線會互相平分"],
+      "圓內接四邊形對角互補；外角等於它的內對角"],
+    ["circle.tangent", 9, "qf-tangent", "直線與圓相切於 A。第一個動作是？",
+      "連 $\\overline{OA}$：它垂直切線",
+      ["連 $\\overline{OA}$：它平行切線", "連圓心到切線的兩個端點", "先用弧長公式求切線長"],
+      "切線⊥過切點的半徑；這條輔助線幾乎是所有切線題的第一步"],
+    ["circle.parts", 9, "qf-chord", "圓心 O 與弦 AB。要求弦長，第一個動作是？",
+      "從 O 作 AB 的垂線，它會平分 AB",
+      ["只要連 $\\overline{OA}$ 與 $\\overline{OB}$ 就夠了", "把 AB 當成直徑，長度就是 $2r$", "連 O 到 A 之後量出圓心角"],
+      "半徑、弦心距、半弦長會組成直角三角形：$r^2=d^2+\\left(\\dfrac{L}{2}\\right)^2$"],
+    ["angle.parallel", 8, "qf-parallel-cut", "$L_1\\parallel L_2$，已知角 $x$。第一個動作是？",
+      "用平行線截角把 $x$ 搬到另一條線上",
+      ["拿量角器把要求的角量出來", "先證兩個三角形全等再搬角度", "先用畢氏定理算出截線的長"],
+      "平行線題型幾乎都是把已知角「搬」到要求的位置"],
+    ["angle.tri", 8, "qf-isosceles", "圖中 $\\overline{AB}=\\overline{AC}$。第一個動作是？",
+      "把兩底角標成相等：$\\angle B=\\angle C$",
+      ["把頂角 $\\angle A$ 標成 $60^\\circ$", "把底角 $\\angle B$ 標成直角", "第三邊也一樣長：$\\overline{BC}=\\overline{AB}$"],
+      "等腰三角形兩底角相等；要再拆就從 A 作「三線合一」的那條線"],
+    ["angle.tri", 8, "qf-exterior", "BC 延長到 D，外角為 $x$。第一個動作是？",
+      "$x=\\angle A+\\angle B$（兩個不相鄰的內角和）",
+      ["$x=\\angle A+\\angle B+\\angle ACB$", "$x=\\angle ACB$", "$x=180^\\circ-\\angle A$"],
+      "外角定理；也可以用「外角＋相鄰內角＝$180^\\circ$」推出來"],
+    ["angle.cong", 8, "qf-shared-side", "圖中 $\\overline{AC}=\\overline{AD}$、$\\overline{BC}=\\overline{BD}$。第一個動作是？",
+      "用 SSS 證兩個三角形全等",
+      ["用 SAS，夾角取 $\\angle C$ 與 $\\angle D$", "用 AAA，三個角都相等就全等", "只能證相似，證不出全等"],
+      "共用邊就是第三組相等的邊；全等之後就能說 $\\angle C=\\angle D$、AB 垂直平分 CD"],
+    ["angle.cong", 8, "qf-vertical-tri", "圖中 $\\overline{OA}=\\overline{OC}$、$\\overline{OB}=\\overline{OD}$。第一個動作是？",
+      "用 SAS：夾角是對頂角，自動相等",
+      ["用 SSS：三組對應邊都已經相等", "用 SSA：角不是夾角也可以", "只能證相似，證不出全等"],
+      "兩邊＋它們的夾角；對頂角相等是這一型免費送的條件"],
+    ["similar.sim", 9, "qf-midpoints", "M、N 分別是 AB、AC 的中點。第一個動作是？",
+      "連 $\\overline{MN}$：平行 BC 且是一半",
+      ["連 $\\overline{MN}$：長度和 BC 一樣", "連 $\\overline{MN}$：它會垂直 BC", "連 $\\overline{AM}$ 與 $\\overline{AN}$ 兩條線"],
+      "看到兩個中點就把連線畫出來，常常一畫就解決"],
+    ["quad.special", 8, "qf-perp-diag", "四邊形的兩條對角線互相垂直。求面積，第一個動作是？",
+      "用 $\\dfrac{1}{2}\\times d_1\\times d_2$",
+      ["用「底 × 高」，底取 $\\overline{AC}$", "用 $d_1\\times d_2$，不必除以 2", "先把四個邊長量出來再相加"],
+      "只要對角線互相垂直就能用，不必是菱形、也不必互相平分"],
+    ["angle.center", 9, "qf-centroid", "G 是三中線的交點。第一個動作是？",
+      "頂點到 G 比 G 到對邊中點 $=2:1$",
+      ["頂點到 G 比 G 到對邊中點 $=1:2$", "G 剛好是每一條中線的中點", "G 到三個頂點的距離都相等"],
+      "靠頂點的那段是 2、靠邊的那段是 1；三條中線也把面積分成六等份"],
+    ["quad.poly", 8, "qf-pentagon", "這是一個五邊形。要求內角和，第一個動作是？",
+      "拉對角線，切成 3 個三角形",
+      ["直接用 $5\\times180^\\circ$ 當內角和", "用外角和 $360^\\circ$ 減掉就是內角和", "先假設它是正五邊形再算"],
+      "$n$ 邊形切成 $(n-2)$ 個三角形 → 內角和 $=(5-2)\\times180^\\circ=540^\\circ$"],
+    ["quad.trap", 8, "qf-trapezoid", "梯形 ABCD（AB ∥ DC），已知兩底與兩腰。第一個動作是？",
+      "作輔助線：作高，或過端點作一腰的平行線",
+      ["直接把斜的那一腰當成高來算面積", "連兩條對角線，用對角線相乘除以 2", "把它當成平行四邊形，對邊都相等"],
+      "梯形算不下去就補輔助線，把它切成「矩形＋兩個直角三角形」或「平行四邊形＋三角形」"],
+    ["circle.tangent", 9, "qf-two-tangents", "自圓外一點 P 作兩條切線。第一個動作是？",
+      "用切線長相等：$\\overline{PA}=\\overline{PB}$",
+      ["用 $\\overline{PA}=\\overline{OA}$（切線長等於半徑）", "$\\overline{PA}+\\overline{PB}$ 等於直徑", "兩條切線一定互相垂直"],
+      "連 OA、OB 後兩個直角三角形 RHS 全等，所以切線長相等"]
+  ];
+
+  /* 把圖嵌進題目：圖在 data/figs.js（window.FIGS）。沒載入那個檔就整個題型不出現。 */
+  function figRow(r) {
+    var svg = (window.FIGS || {})[r[2]];
+    if (!svg) return null;
+    return [r[0], r[1],
+      '<div class="q-fig">' + svg + '</div><div class="q-ask">' + r[3] + '</div>',
+      r[4], r[5], r[6]];
+  }
+  var FIGROWS = FIGURE.map(figRow).filter(Boolean);
+  if (!FIGROWS.length && window.console) {
+    console.warn("[reflex-bank] 沒有載入 data/figs.js，「看圖反射」題型不會出現");
+  }
+
   /* ────────── 題源索引 ────────── */
   var GENS = {
     calc: [
@@ -1467,7 +1566,7 @@
       { f: gTrapezoid,     w: 2, ts: ["quad.trap"] }
     ]
   };
-  var STATICS = { keyword: KEYWORD, formula: FORMULA, geo: GEO };
+  var STATICS = { keyword: KEYWORD, formula: FORMULA, geo: GEO, figure: FIGROWS };
 
   /* 範圍判斷：set = null（不限）或 Set（單元 id）；set.grade 有值時再用「題目自己的年級」過濾，
    * 因為一個單元可能橫跨兩個年級（例：統計代表值 7、全距與盒狀圖 9）。
@@ -1589,6 +1688,6 @@
       return null;
     },
 
-    size: { keyword: KEYWORD.length, formula: FORMULA.length, geo: GEO.length }
+    size: { keyword: KEYWORD.length, formula: FORMULA.length, geo: GEO.length, figure: FIGROWS.length }
   };
 })();
