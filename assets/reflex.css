@@ -435,4 +435,10 @@ table.rx-rec td.rec-scope { font-size: .82rem; color: var(--ink-soft); }
 .bd-tbl tr.me td{background:var(--purple-soft)}
 .bd-me{margin-left:6px;font-size:.72rem;background:var(--purple);color:#fff;border-radius:999px;padding:1px 7px;vertical-align:middle}
 .bd-new{margin-left:8px;font-size:.8rem;color:#fff;background:var(--rx-hp);border-radius:999px;padding:1px 8px;vertical-align:middle}
-@media (max-width:520px){.bd-tbl th:nth-child(5),.bd-tbl td:nth-child(5),.bd-tbl th:nth-child(6),.bd-tbl td:nth-child(6){display:none}}
+.bd-diff button.sum{border-style:dashed}
+.bd-diff button.on.sum{border-style:solid}
+/* 手機：隱藏「連擊」與「範圍」，留下名次／暱稱／分數／正確率／場次 */
+@media (max-width:560px){
+  .bd-tbl:not(.sum) th:nth-child(5),.bd-tbl:not(.sum) td:nth-child(5),
+  .bd-tbl:not(.sum) th:nth-child(7),.bd-tbl:not(.sum) td:nth-child(7){display:none}
+}

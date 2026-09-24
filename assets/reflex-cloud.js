@@ -6,9 +6,12 @@
  *
  * 資料結構（Firestore）
  *   users/{uid}                          { nick, email, createdAt }
- *   boards/{boardId}/entries/{uid}       個人在某個榜上的最佳成績（一人一筆，只會往上更新）
+ *   boards/{boardId}/entries/{uid}       個人在某個榜上的最佳成績（一人一筆，分數只會往上更新）
  *       boardId = "all_s10"（總榜，依難度）或 "w2026-39_s10"（本週榜，ISO 週）
- *       { uid, nick, score, acc, combo, avg, diff, scope, ts }
+ *       { uid, nick, score, acc, combo, avg, diff, scope, ts, plays }
+ *       plays = 在這個榜打過幾場（每上傳一次 +1，分數沒進步也算）
+ *
+ * 「綜合」榜（diff = "sum"）不另外存：讀五個難度的榜，在前端把同一個人的分數加起來。
  *   runs/{autoId}                        每一場的完整紀錄（老師在主控台看／匯出用，學生讀不到）
  *
  * 榜的 id 把「難度」和「週」編進集合名稱，查詢時只要 orderBy(score) 一個欄位，
@@ -37,6 +40,22 @@
     return "w" + y + "-" + (w < 10 ? "0" : "") + w;
   }
   function boardId(kind, diff) { return (kind === "week" ? weekKey() : "all") + "_" + diff; }
+  var SUM = "sum";                /* 綜合榜：五個難度的分數合計，不是真的集合 */
+  /* 把五個難度的榜合併成一個：同一個人的分數、場次相加 */
+  function mergeBoards(lists) {
+    var by = {};
+    lists.forEach(function (rows) {
+      rows.forEach(function (x) {
+        var o = by[x.uid] || (by[x.uid] = { uid: x.uid, nick: x.nick, score: 0, plays: 0, levels: 0 });
+        o.score += x.score || 0;
+        o.plays += x.plays || 0;
+        o.levels++;
+        if (x.nick) o.nick = x.nick;
+      });
+    });
+    return Object.keys(by).map(function (k) { return by[k]; })
+      .sort(function (a, b) { return b.score - a.score; });
+  }
   function cleanNick(s) {
     return String(s || "").replace(/[<>&"'\u0000-\u001f]/g, "").trim().slice(0, 12);
   }
@@ -72,7 +91,8 @@
         ["all", "week"].forEach(function (k) {
           var b = db.boards[boardId(k, d)] = db.boards[boardId(k, d)] || {};
           b["mock-" + i] = { uid: "mock-" + i, nick: n, score: 1200 + i * 730 + DIFFS.indexOf(d) * 90,
-            acc: 60 + i * 8, combo: 3 + i, avg: (5 - i * 0.6).toFixed(2), diff: d, scope: "國中全範圍", ts: Date.now() - i * 864e5 };
+            acc: 60 + i * 8, combo: 3 + i, avg: (5 - i * 0.6).toFixed(2), diff: d, scope: "國中全範圍",
+            ts: Date.now() - i * 864e5, plays: 1 + i * 2 };
         });
       });
     });
@@ -102,13 +122,21 @@
           var id = boardId(k, run.diff), b = db.boards[id] = db.boards[id] || {};
           var old = b[uid];
           var improved = !old || run.score > old.score;
-          if (improved) b[uid] = Object.assign({}, run, { uid: uid, nick: state.nick });
-          var rows = top(id), best = (b[uid] || old).score;
-          out[k] = { improved: improved, best: best, rank: rows.findIndex(function (r) { return r.uid === uid; }) + 1, total: rows.length };
+          var plays = ((old && old.plays) || 0) + 1;
+          b[uid] = improved ? Object.assign({}, run, { uid: uid, nick: state.nick, plays: plays })
+                            : Object.assign({}, old, { plays: plays });
+          var rows = top(id), best = b[uid].score;
+          out[k] = { improved: improved, best: best, plays: plays,
+            rank: rows.findIndex(function (r) { return r.uid === uid; }) + 1, total: rows.length };
         });
         return Promise.resolve(out);
       },
       board: function (kind, diff) {
+        if (diff === SUM) {
+          var all = mergeBoards(DIFFS.map(function (d) { return top(boardId(kind, d)); }));
+          return Promise.resolve({ rows: all.slice(0, TOP), sum: true, myUid: uid,
+            me: all.filter(function (x) { return x.uid === uid; })[0] || null });
+        }
         var rows = top(boardId(kind, diff)).slice(0, TOP);
         return Promise.resolve({ rows: rows, me: (db.boards[boardId(kind, diff)] || {})[uid] || null, myUid: uid });
       }
@@ -193,35 +221,60 @@
             }));
           });
       },
-      /* 上傳一場：寫 runs、更新兩個榜（只在破個人最佳時），回傳名次 */
+      /* 上傳一場：寫 runs、更新兩個榜。
+       * 分數只留最好的一次，但「場次」每一場都要 +1，所以沒破紀錄時也會寫一次（分數原封不動）。 */
       submit: function (run) {
         var u = state.user;
         if (!u || !state.nick) return Promise.reject(new Error("not signed in"));
-        var entry = { uid: u.uid, nick: state.nick, score: run.score, acc: run.acc, combo: run.combo,
-          avg: run.avg, diff: run.diff, scope: run.scope, ts: F.serverTimestamp() };
+        var base = { uid: u.uid, nick: state.nick, score: run.score, acc: run.acc, combo: run.combo,
+          avg: run.avg, diff: run.diff, scope: run.scope };
         var out = {};
-        return F.addDoc(F.collection(fs, "runs"), Object.assign({ week: weekKey(), email: u.email }, entry))
+        return F.addDoc(F.collection(fs, "runs"), Object.assign({ week: weekKey(), email: u.email, ts: F.serverTimestamp() }, base))
           .catch(function () {})
           .then(function () {
             return Promise.all(["all", "week"].map(function (k) {
               var id = boardId(k, run.diff), ref = entryDoc(id, u.uid);
               return F.getDoc(ref).then(function (s) {
-                var old = s.exists() ? s.data().score : -1;
-                var improved = run.score > old;
-                var p = improved ? F.setDoc(ref, entry) : Promise.resolve();
-                return p.then(function () { return rank(id, u.uid); }).then(function (r) {
-                  out[k] = { improved: improved, best: Math.max(old, run.score), rank: r.rank, total: r.total };
+                var old = s.exists() ? s.data() : null;
+                var improved = !old || run.score > old.score;
+                var plays = ((old && old.plays) || 0) + 1;
+                var next = improved
+                  ? Object.assign({}, base, { ts: F.serverTimestamp(), plays: plays })
+                  : Object.assign({}, old, { nick: state.nick, plays: plays });
+                /* 安全規則還沒加 plays 時這一寫會被擋：破紀錄就退回「只寫分數」那一版，
+                 * 沒破紀錄的話本來就沒有非寫不可的東西，直接略過，不要害整場上傳失敗。 */
+                var write = F.setDoc(ref, next).catch(function () {
+                  if (!improved) return;
+                  delete next.plays;
+                  return F.setDoc(ref, next);
+                });
+                return write.then(function () { return rank(id, u.uid); }).then(function (r) {
+                  out[k] = { improved: improved, plays: plays,
+                    best: improved ? run.score : old.score, rank: r.rank, total: r.total };
                 });
               });
             }));
           }).then(function () { return out; });
       },
       board: function (kind, diff) {
+        var uid = state.user ? state.user.uid : null;
+        if (diff === SUM) {
+          /* 綜合榜：把五個難度的榜各抓一次，在前端合併（不必另外存一份資料） */
+          return Promise.all(DIFFS.map(function (d) {
+            var q = F.query(F.collection(fs, "boards", boardId(kind, d), "entries"),
+              F.orderBy("score", "desc"), F.limit(RANK_SCAN));
+            return F.getDocs(q).then(function (s) { return s.docs.map(function (x) { return x.data(); }); });
+          })).then(function (lists) {
+            var all = mergeBoards(lists);
+            return { rows: all.slice(0, TOP), sum: true, myUid: uid,
+              me: all.filter(function (x) { return x.uid === uid; })[0] || null };
+          });
+        }
         var id = boardId(kind, diff);
         var q = F.query(F.collection(fs, "boards", id, "entries"), F.orderBy("score", "desc"), F.limit(TOP));
-        var me = state.user ? F.getDoc(entryDoc(id, state.user.uid)).then(function (s) { return s.exists() ? s.data() : null; }) : Promise.resolve(null);
+        var me = uid ? F.getDoc(entryDoc(id, uid)).then(function (s) { return s.exists() ? s.data() : null; }) : Promise.resolve(null);
         return Promise.all([F.getDocs(q), me]).then(function (r) {
-          return { rows: r[0].docs.map(function (d) { return d.data(); }), me: r[1], myUid: state.user ? state.user.uid : null };
+          return { rows: r[0].docs.map(function (d) { return d.data(); }), me: r[1], myUid: uid };
         });
       }
     };

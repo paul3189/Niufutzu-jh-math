@@ -378,7 +378,10 @@
       '<button type="button" data-k="all"' + (boardSel.kind === "all" ? ' class="on"' : "") + '>總榜</button></span>' +
       '<span class="bd-diff">' + DIFFS.map(function (d) {
         return '<button type="button" data-d="' + d.id + '"' + (boardSel.diff === d.id ? ' class="on"' : "") + '>' + d.sec + ' 秒<small>' + d.name + '</small></button>';
-      }).join("") + '</span></div><div id="bdBody" class="bd-body">載入中…</div></div>';
+      }).join("") +
+      '<button type="button" data-d="sum"' + (boardSel.diff === "sum" ? ' class="on sum"' : ' class="sum"') +
+      '>綜合<small>五個難度合計</small></button></span></div>' +
+      '<div id="bdBody" class="bd-body">載入中…</div></div>';
     box.innerHTML = html;
     box.querySelectorAll(".bd-kind button").forEach(function (b) {
       b.addEventListener("click", function () { boardSel.kind = b.getAttribute("data-k"); renderBoard(); });
@@ -399,14 +402,25 @@
   function paintBoard(r) {
     var rows = r.rows || [];
     var me = r.myUid;
+    var sum = !!r.sum;
+    var playLabel = boardSel.kind === "week" ? "本週場次" : "總場次";
     var inTop = rows.some(function (x) { return x.uid === me; });
+    var head = sum
+      ? '<tr><th>名次</th><th>暱稱</th><th>總分</th><th>' + playLabel + '</th><th>上榜難度</th></tr>'
+      : '<tr><th>名次</th><th>暱稱</th><th>分數</th><th>正確率</th><th>連擊</th><th>' + playLabel + '</th><th>範圍</th></tr>';
     var html = !rows.length ? '<div class="rx-none">這個榜還沒有人上榜——打一場就是第一名！</div>' :
-      '<table class="bd-tbl"><tr><th>名次</th><th>暱稱</th><th>分數</th><th>正確率</th><th>連擊</th><th>範圍</th></tr>' +
+      '<table class="bd-tbl' + (sum ? " sum" : "") + '">' + head +
       rows.map(function (x, i) {
         var medal = i === 0 ? "🥇" : i === 1 ? "🥈" : i === 2 ? "🥉" : (i + 1);
-        return '<tr' + (x.uid === me ? ' class="me"' : "") + '><td>' + medal + '</td><td>' + esc(x.nick) +
-          (x.uid === me ? '<span class="bd-me">我</span>' : "") + '</td><td class="bd-s">' + x.score + '</td><td>' + x.acc + '%</td><td>' + x.combo + '</td><td class="bd-sc">' + esc(x.scope) + '</td></tr>';
-      }).join("") + '</table>';
+        var who = '<td>' + medal + '</td><td>' + esc(x.nick) +
+          (x.uid === me ? '<span class="bd-me">我</span>' : "") + '</td><td class="bd-s">' + x.score + '</td>';
+        var rest = sum
+          ? '<td>' + (x.plays || 0) + '</td><td>' + x.levels + ' / ' + DIFFS.length + '</td>'
+          : '<td>' + x.acc + '%</td><td>' + x.combo + '</td><td>' + (x.plays || "—") +
+            '</td><td class="bd-sc">' + esc(x.scope) + '</td>';
+        return '<tr' + (x.uid === me ? ' class="me"' : "") + '>' + who + rest + '</tr>';
+      }).join("") + '</table>' +
+      (sum ? '<div class="cl-note">綜合榜＝五個難度各自的最佳分數相加，所以每個難度都練過的人分數會比較高。</div>' : "");
     if (me && r.me && !inTop) html += '<div class="cl-note">你在這個榜的最佳是 <b>' + r.me.score + '</b> 分，還沒進前 ' + rows.length + ' 名，再衝！</div>';
     if (!me) html += '<div class="cl-note">登入並設定暱稱後，你的成績也會出現在這裡。</div>';
     $("bdBody").innerHTML = html;
@@ -423,7 +437,9 @@
       renderBoard();                       /* 選單雖然還沒顯示，先把榜更新好 */
       function line(name, x) {
         var where = x.rank ? "第 <b>" + x.rank + "</b> 名" : "前 100 名之外";
-        return "<div>" + name + "：" + where + (x.improved ? '<span class="bd-new">刷新個人最佳！</span>' : "（個人最佳 " + x.best + " 分）") + "</div>";
+        var plays = x.plays ? "　累計 " + x.plays + " 場" : "";
+        return "<div>" + name + "：" + where +
+          (x.improved ? '<span class="bd-new">刷新個人最佳！</span>' : "（個人最佳 " + x.best + " 分）") + plays + "</div>";
       }
       return '<div class="rx-cloud end"><b>☁️ 成績已上傳</b>' + line("本週榜", r.week) + line("總榜", r.all) + '</div>';
     }).catch(function (e) {
