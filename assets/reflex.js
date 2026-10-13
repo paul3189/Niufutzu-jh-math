@@ -215,7 +215,7 @@
     var ex = $("extToggle");
     if (ex) {
       ex.innerHTML = '<label class="rx-ext"><input type="checkbox" id="extChk"' + (sel.ext ? " checked" : "") +
-        '> 包含<b>補充題</b>（超出 108 課綱國中範圍：錐體體積、兩圓位置關係、相似立體體積比…，共 ' +
+        '> 包含<b>補充題</b>（超出 108 課綱國中範圍：兩圓位置關係、相似立體體積比…，共 ' +
         REFLEX_BANK.extCount() + ' 種題源）</label>';
       $("extChk").addEventListener("change", function () { sel.ext = this.checked; buildMenu(); });
     }
@@ -517,25 +517,11 @@
   }
 
   /* ══════════ 出題 ══════════ */
+  /* 同一場不重複：交給 REFLEX_BANK.pick 在範圍內挑還沒出過的題 */
   function pickItem() {
-    var order = G.cats.slice();
-    if (order.length > 1) {
-      order = order.filter(function (c) { return c !== G.lastCat; });
-      if (Math.random() < 0.25) order = G.cats.slice();
-    }
-    for (var attempt = 0; attempt < order.length + 2; attempt++) {
-      var c = order[Math.floor(Math.random() * order.length)];
-      var it = null;
-      for (var t = 0; t < 18; t++) {
-        it = REFLEX_BANK.make(c, G.set);
-        if (!it) break;
-        if (!G.used[it.key]) break;
-      }
-      if (it) { G.lastCat = c; G.used[it.key] = 1; return it; }
-      order = order.filter(function (x) { return x !== c; });
-      if (!order.length) order = G.cats.slice();
-    }
-    return null;
+    var it = REFLEX_BANK.pick(G.cats, G.set, G.used, G.lastCat);
+    if (it) { G.lastCat = it.cat; G.used[it.key] = 1; }
+    return it;
   }
 
   function nextQuestion() {

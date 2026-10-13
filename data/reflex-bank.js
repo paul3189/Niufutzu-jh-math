@@ -196,6 +196,7 @@
   /* 絕對值與數線距離 */
   function gAbs() {
     var a = ri(21) - 10, b = ri(21) - 10;
+    while (b === a) b = ri(21) - 10;          /* 同一點的距離沒意義 */
     if (ri(2)) {
       return mk("calc", "number.int", 7, "$|" + a + "| = \\ ?$", String(Math.abs(a)),
         [String(-Math.abs(a)), String(a * 2), String(0)],
@@ -204,12 +205,13 @@
     return mk("calc", "number.int", 7,
       "數線上 $" + a + "$ 與 $" + b + "$ 兩點的距離 = ?", String(Math.abs(a - b)),
       [String(a - b), String(a + b), String(Math.abs(a + b))],
-      "兩點距離 $=|a-b|=|" + a + "-(" + b + ")|=" + Math.abs(a - b));
+      "兩點距離 $=|a-b|=|" + a + "-(" + b + ")|=" + Math.abs(a - b) + "$");
   }
 
   /* 最大公因數／最小公倍數 */
   function gGcdLcm() {
     var a = 4 + ri(45), b = 4 + ri(45);
+    while (b === a) b = 4 + ri(45);           /* 兩數相同沒意義 */
     var g = gcd(a, b), l = a * b / g;
     if (ri(2)) {
       return mk("calc", "number.prime", 7, "$" + a + "$ 與 $" + b + "$ 的最大公因數 = ?",
@@ -218,7 +220,7 @@
     }
     return mk("calc", "number.prime", 7, "$" + a + "$ 與 $" + b + "$ 的最小公倍數 = ?",
       String(l), [String(g), String(a * b), String(l / 2)],
-      "最小公倍數 $=\\dfrac{a\\times b}{\\gcd}=\\dfrac{" + a + "\\times" + b + "}{" + g + "}=" + l);
+      "最小公倍數 $=\\dfrac{a\\times b}{\\gcd}=\\dfrac{" + a + "\\times" + b + "}{" + g + "}=" + l + "$");
   }
 
   /* 分數四則 */
@@ -492,7 +494,7 @@
     return mk("calc", "algebra.seq", 8,
       "等差數列 $" + a1 + ", " + (a1 + d) + ", " + (a1 + 2 * d) + ", \\dots$ 前 $" + m + "$ 項的和 = ?",
       String(sum), [String(m * last), String((a1 + last) / 2), String(sum + d)],
-      "和 $=\\dfrac{項數\\times(首項+末項)}{2}=\\dfrac{" + m + "\\times(" + a1 + "+" + last + ")}{2}=" + sum);
+      "和 $=\\dfrac{項數\\times(首項+末項)}{2}=\\dfrac{" + m + "\\times(" + a1 + "+" + last + ")}{2}=" + sum + "$");
   }
 
   /* 統計代表值 */
@@ -770,8 +772,8 @@
         [P(frac(r * r * h, 3)), P(2 * r * h), P(r * h), P(2 * r * r * h), P(r * r), P(r * r * h * 3)],
         "柱體體積 = 底面積 × 高 $=\\pi\\times" + r + "^2\\times" + h + "$");
     }
-    /* 課綱 S-9-13 只有「直角柱的體積」；錐體體積是補充題 */
-    return ext(mk("geo", "solid.pyramid", 9,
+    /* 課綱 S-9-13 只寫「直角柱的體積」，但老師 2026-10-08 裁定錐體體積會教 → 一般題 */
+    return (mk("geo", "solid.pyramid", 9,
       "底半徑 $" + r + "$、高 $" + h + "$ 的圓錐體積 = ?", P(frac(r * r * h, 3)),
       [P(r * r * h), P(frac(r * r * h, 2)), P(frac(2 * r * h, 3)), P(r * h), P(frac(r * r * h, 6))],
       "錐體是同底同高柱體的 $\\dfrac{1}{3}$"));
@@ -887,7 +889,7 @@
     ["solid.prism", 9, "「底面積 × 高」是什麼？", "柱體體積", ["錐體體積", "柱體表面積", "柱體側面積"],
       "所有柱體（圓柱、角柱）通用"],
     ["solid.pyramid", 9, "「底面積 × 高 ÷ 3」是什麼？", "錐體體積", ["柱體體積", "柱體側面積", "錐體表面積"],
-      "同底同高時，錐體是柱體的三分之一", true],
+      "同底同高時，錐體是柱體的三分之一"],
     ["solid.pyramid", 9, "$\\pi r\\ell$ 是什麼？（$\\ell$ 為母線）", "圓錐的側面積",
       ["圓錐的底面積", "圓柱的側面積", "圓錐的體積"],
       "側面攤開是扇形；底面積是 $\\pi r^2$，別跟側面積搞混"],
@@ -899,7 +901,7 @@
       ["一元二次方程式的判別式", "根與係數關係", "配方法"],
       "分解不出來時就用它；分母是 $2a$ 不是 $2$"],
     ["equation.quad", 8, "$b^2-4ac$ 是什麼？", "判別式", ["公式解", "兩根之和", "兩根之積"],
-      "它決定實根的個數：$>0$ 兩相異實根、$=0$ 重根、$<0$ 沒有實根"],
+      "它決定實根的個數：$>0$ 兩相異實根、$=0$ 重根、$<0$ 無實根"],
     ["quad.trap", 8, "「(上底 + 下底) × 高 ÷ 2」是什麼？", "梯形面積", ["平行四邊形面積", "菱形面積", "三角形面積"],
       "也可以看成「兩腰中點連線長 × 高」"],
     ["quad.special", 8, "「兩對角線相乘 ÷ 2」是什麼？", "菱形（或箏形）的面積", ["矩形面積", "梯形面積", "平行四邊形面積"],
@@ -1263,7 +1265,7 @@
       "內角和才會隨邊數增加（每多一邊多 $180^\\circ$）"],
     ["solid.pyramid", 9, "同底同高的柱體與錐體，體積關係為？",
       "錐體是柱體的 $\\dfrac{1}{3}$", ["錐體是柱體的 $\\dfrac{1}{2}$", "兩者相等", "錐體是柱體的 $\\dfrac{2}{3}$"],
-      "所以錐體體積公式才會多一個 $\\dfrac{1}{3}$", true],
+      "所以錐體體積公式才會多一個 $\\dfrac{1}{3}$"],
     ["angle.life", 7, "從正前方、正上方、正側方看一個立體所畫出的圖，合稱為？",
       "三視圖", ["透視圖", "展開圖", "截面圖"],
       "三視圖只記錄輪廓與長度，不畫遠近變形"],
@@ -1569,6 +1571,25 @@
   };
   var STATICS = { keyword: KEYWORD, formula: FORMULA, geo: GEO, figure: FIGROWS };
 
+  /* ────────── 外掛題組（data/reflex-plus-*.js，要在本檔之前載入） ──────────
+   * 外掛檔寫法：(window.REFLEX_PLUS = window.REFLEX_PLUS || []).push(function (H) {
+   *   return { rows: { 題型: [ [單元, 年級, 題目, 正解, [誘答×3], 提示, 補充?], ... ] },
+   *            gens: { 題型: [ { f: 產生器, w: 權重 }, ... ] } };
+   * });
+   * H 是本檔的小工具：產生器用 H.mk(...)／H.mkDeg(...) 組題，跟本檔的產生器同一套。 */
+  var H = { mk: mk, mkDeg: mkDeg, ext: ext, ri: ri, pick: pick, shuffle: shuffle, r1: r1, gcd: gcd, frac: frac, sgn: sgn };
+  (window.REFLEX_PLUS || []).forEach(function (plug) {
+    var p = plug(H) || {};
+    Object.keys(p.rows || {}).forEach(function (c) {
+      var a = STATICS[c] || (STATICS[c] = []);
+      a.push.apply(a, p.rows[c]);
+    });
+    Object.keys(p.gens || {}).forEach(function (c) {
+      var a = GENS[c] || (GENS[c] = []);
+      a.push.apply(a, p.gens[c]);
+    });
+  });
+
   /* 範圍判斷：set = null（不限）或 Set（單元 id）；set.grade 有值時再用「題目自己的年級」過濾，
    * 因為一個單元可能橫跨兩個年級（例：統計代表值 7、全距與盒狀圖 9）。
    * 補充題（ext）要 REFLEX_BANK.includeExt 為 true 才出。 */
@@ -1611,6 +1632,18 @@
     var r = Math.random() * total;
     for (i = 0; i < list.length; i++) { r -= list[i].w; if (r <= 0) return list[i]; }
     return list[list.length - 1];
+  }
+
+  /* 數學式裡的「<」後面若緊接字母，題目用 innerHTML 放進頁面時會被當成 HTML 標籤（例 $ac<bc$）。
+   * 主檔一律寫「 < 」，外掛題組不一定，所以出題時統一在 $…$ 裡的 < 後面補一個空白（重複套用不會再變）。 */
+  function fixLt(s) {
+    return typeof s === "string" ? s.replace(/\$[^$]*\$/g, function (m) { return m.replace(/<(?=\S)/g, "< "); }) : s;
+  }
+  function clean(it) {
+    if (!it) return it;
+    it.q = fixLt(it.q); it.tip = fixLt(it.tip);
+    it.choices = it.choices.map(fixLt);
+    return it;
   }
 
   /* ────────── 對外 API ────────── */
@@ -1680,13 +1713,50 @@
         var r = rows[ri(rows.length)];
         var st = mk(cat, r[0], r[1], r[2], r[3], r[4], r[5]);
         if (r[6]) st.ext = true;
-        return st;
+        return clean(st);
       }
       for (var i = 0; i < 60; i++) {
         var it = pickW(gs).f();
-        if (itemOk(it.t, it.g, !!it.ext, set)) return it;
+        if (itemOk(it.t, it.g, !!it.ext, set)) return clean(it);
       }
       return null;
+    },
+
+    /* 同一場不重複出題：used 是這一場已出過的 key。
+     * 先在選定的題型裡找沒出過的（手寫題直接濾掉用過的；產生器多抽幾次換數字），
+     * 選定題型都用完了才借範圍內其他題型，全部用完才允許重複（題源極少的單元才會發生）。 */
+    pick: function (cats, set, used, lastCat) {
+      function fresh(cat) {
+        var rows = statRows(cat, set).filter(function (r) { return !used[cat + "|" + r[2]]; });
+        var gs = genList(cat, set);
+        var tryGen = gs.length && (!rows.length || Math.random() < 0.5);
+        if (tryGen) {
+          for (var i = 0; i < 80; i++) {
+            var it = pickW(gs).f();
+            if (itemOk(it.t, it.g, !!it.ext, set) && !used[it.key]) return it;
+          }
+        }
+        if (!rows.length) return null;
+        var r = rows[ri(rows.length)];
+        var st = mk(cat, r[0], r[1], r[2], r[3], r[4], r[5]);
+        if (r[6]) st.ext = true;
+        return st;
+      }
+      function from(list) {
+        list = shuffle(list);
+        if (list.length > 1 && lastCat) {           /* 盡量不要連續同一題型 */
+          var k = list.indexOf(lastCat);
+          if (k > -1 && Math.random() < 0.75) list.push(list.splice(k, 1)[0]);
+        }
+        for (var i = 0; i < list.length; i++) { var it = fresh(list[i]); if (it) return it; }
+        return null;
+      }
+      var it = from(cats.slice());
+      if (!it) it = from(this.availableCats(set).filter(function (c) { return cats.indexOf(c) < 0; }));
+      if (!it) {
+        for (var i = 0; i < cats.length * 3 && !it; i++) it = this.make(cats[ri(cats.length)], set);
+      }
+      return clean(it);
     },
 
     size: { keyword: KEYWORD.length, formula: FORMULA.length, geo: GEO.length, figure: FIGROWS.length }
