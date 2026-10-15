@@ -120,6 +120,8 @@
     { id: "circle.arc",       d: "圓",             n: "弧長與扇形面積",     g: 9 },
     { id: "similar.pyth",     d: "畢氏定理與相似形", n: "畢氏定理",         g: 8 },
     { id: "similar.sim",      d: "畢氏定理與相似形", n: "相似形",           g: 9 },
+    /* 三角比：S-9-4；題目在外掛 data/reflex-plus-trig.js（2026-10-15） */
+    { id: "similar.trig",     d: "畢氏定理與相似形", n: "三角比",           g: 9 },
     { id: "solid.prism",      d: "立體圖形與測量", n: "柱體",               g: 9 },
     { id: "solid.pyramid",    d: "立體圖形與測量", n: "錐體",               g: 9 },
     { id: "solid.space",      d: "立體圖形與測量", n: "空間中的線與平面",   g: 9 },

@@ -1,7 +1,7 @@
 /* 領域 8：畢氏定理與相似形（幾何．以圖為主） */
 TM({
   id: "similar", n: "畢氏定理與相似形", icon: "🔺", color: "#8e3b62", geo: true,
-  ask: "題目要求「長度」時 —— 先找直角（畢氏），再找相似（比例）。這兩招能算出國中九成的長度。",
+  ask: "題目要求「長度」時 —— 先找直角（畢氏），再找相似（比例）。這兩招能算出國中九成的長度；直角三角形再多給一個角，就用三角比。",
   topics: [
 
     {
@@ -201,6 +201,103 @@ TM({
           l: "面積比是「平方」不是「兩倍」；由面積比反推邊長比要開根號。（補充：相似立體的體積比是 $k^3$，不在 108 課綱國中範圍。）",
           fig: "sim-ratio",
           t: "邊長變 2 倍就說面積變 2 倍。"
+        }
+      ]
+    },
+
+    /* 三角比：108 課綱 S-9-4（相似直角三角形邊長比值的不變性）。
+     * 範圍依授課老師 2026-10-15 裁定：sin／cos／tan 的定義、30°／45°／60° 特別角、
+     * sin 與 cos 的互餘關係、tan = sin ÷ cos、三角形面積 ½ab·sinC；同日老師同意加入仰角、俯角、測高應用。
+     * 不收：平方關係當公式、正弦／餘弦定理、和角差角、倍角、弧度、單位圓、鈍角三角比、反三角函數、圖形。 */
+    {
+      id: "trig", n: "三角比", g: 9,
+      kw: ["三角比", "sin", "cos", "tan", "正弦", "餘弦", "正切", "對邊", "鄰邊", "斜邊", "特別角", "30°", "45°", "60°", "互餘", "夾角", "兩邊夾角", "近似值", "仰角", "俯角", "測量", "樓高", "眼高"],
+      flow: "直角三角形裡「已知一個銳角＋一邊、求另一邊」：先站在那個角上分清楚對邊、鄰邊、斜邊，再挑「同時含已知邊與所求邊」的那個三角比；給兩邊和夾角求面積，就用 ½ab·sin C。",
+      fig: "trig-def",
+      tools: [
+        {
+          n: "三角比的定義（sin、cos、tan）",
+          d: "在直角三角形中看一個銳角 $\\theta$：$\\theta$ 的對邊比斜邊叫正弦 $\\sin\\theta$，鄰邊比斜邊叫餘弦 $\\cos\\theta$，對邊比鄰邊叫正切 $\\tan\\theta$。",
+          f: "\\begin{aligned}&\\sin\\theta=\\frac{\\text{對邊}}{\\text{斜邊}}=\\frac{a}{c} \\\\ &\\cos\\theta=\\frac{\\text{鄰邊}}{\\text{斜邊}}=\\frac{b}{c} \\\\ &\\tan\\theta=\\frac{\\text{對邊}}{\\text{鄰邊}}=\\frac{a}{b}\\end{aligned}",
+          w: "直角三角形中，角度和邊長要互相換算時。例：$\\angle C=90^\\circ$、$\\overline{BC}=3$、$\\overline{AC}=4$、$\\overline{AB}=5$，則 $\\sin A=\\dfrac35$、$\\cos A=\\dfrac45$、$\\tan A=\\dfrac34$。",
+          l: "「對邊、鄰邊」是相對於正在看的那個角而言：換成另一個銳角，對邊和鄰邊就對調，斜邊不變。國中只對直角三角形的「銳角」談三角比。",
+          fig: "trig-def",
+          t: "把 $\\angle B$ 的對邊當成 $\\angle A$ 的對邊；或把 $\\cos\\theta$ 記成「對邊比斜邊」。"
+        },
+        {
+          n: "三角比只由角度決定",
+          f: "\\begin{aligned}&\\triangle ABC\\sim\\triangle AB'C' \\\\ &\\Rightarrow \\frac{\\overline{BC}}{\\overline{AB}}=\\frac{\\overline{B'C'}}{\\overline{AB'}}=\\sin A\\end{aligned}",
+          w: "說明為什麼 $\\sin30^\\circ$ 是一個固定的數。例：斜邊 $2$ 與斜邊 $10$ 的 $30^\\circ$-$60^\\circ$-$90^\\circ$ 三角形，$30^\\circ$ 的對邊分別是 $1$ 與 $5$，比值都是 $\\dfrac12$。",
+          l: "有一個銳角相等的兩個直角三角形一定相似（AA），對應邊成比例，所以邊長的「比值」不因三角形放大縮小而改變，只跟角度有關（108 課綱 S-9-4）。",
+          fig: "trig-similar",
+          x: "這就是相似形的「對應邊成比例」：三角比是把相似比固定成一個看角度就知道的數。",
+          t: "以為三角形畫得比較大，$\\sin\\theta$ 就比較大。"
+        },
+        {
+          n: "30°、60° 的三角比",
+          f: "\\begin{aligned}&\\sin30^\\circ=\\tfrac12,\\ \\cos30^\\circ=\\tfrac{\\sqrt3}{2} \\\\ &\\tan30^\\circ=\\tfrac{\\sqrt3}{3} \\\\ &\\sin60^\\circ=\\tfrac{\\sqrt3}{2},\\ \\cos60^\\circ=\\tfrac12 \\\\ &\\tan60^\\circ=\\sqrt3\\end{aligned}",
+          w: "由 $30^\\circ$-$60^\\circ$-$90^\\circ$ 的邊長比 $1:\\sqrt3:2$ 直接讀出來，不必硬背。例：斜邊 $8$、一個銳角 $30^\\circ$，它的對邊 $=8\\sin30^\\circ=4$、鄰邊 $=8\\cos30^\\circ=4\\sqrt3$。",
+          l: "短股 $1$ 對 $30^\\circ$、長股 $\\sqrt3$ 對 $60^\\circ$、斜邊 $2$。$\\tan30^\\circ=\\dfrac{1}{\\sqrt3}$，有理化後寫成 $\\dfrac{\\sqrt3}{3}$。",
+          fig: "spec-3060",
+          t: "把 $\\sin30^\\circ$ 和 $\\sin60^\\circ$ 記反——畫出三角形，$30^\\circ$ 的對邊是最短的那一邊。"
+        },
+        {
+          n: "45° 的三角比",
+          f: "\\begin{aligned}&\\sin45^\\circ=\\cos45^\\circ=\\tfrac{\\sqrt2}{2} \\\\ &\\tan45^\\circ=1\\end{aligned}",
+          w: "等腰直角三角形、正方形的對角線。例：等腰直角三角形的斜邊 $6$，一股 $=6\\sin45^\\circ=3\\sqrt2$。",
+          l: "由 $1:1:\\sqrt2$ 讀出來：$\\sin45^\\circ=\\dfrac{1}{\\sqrt2}=\\dfrac{\\sqrt2}{2}$；兩股相等，所以 $\\tan45^\\circ=1$。",
+          fig: "spec-45",
+          t: "把 $\\sin45^\\circ$ 寫成 $\\sqrt2$（那是斜邊比股，倒過來了）。"
+        },
+        {
+          n: "特別角三角比一覽",
+          f: "\\begin{array}{c|ccc} & 30^\\circ & 45^\\circ & 60^\\circ \\\\[4pt] \\hline \\rule{0pt}{22pt}\\sin & \\dfrac12 & \\dfrac{\\sqrt2}{2} & \\dfrac{\\sqrt3}{2} \\\\[10pt] \\cos & \\dfrac{\\sqrt3}{2} & \\dfrac{\\sqrt2}{2} & \\dfrac12 \\\\[10pt] \\tan & \\dfrac{\\sqrt3}{3} & 1 & \\sqrt3 \\end{array}",
+          w: "考前快速核對；特別角的計算題。例：$\\sin30^\\circ+\\cos60^\\circ=\\dfrac12+\\dfrac12=1$。",
+          l: "$\\sin$ 那一列和 $\\cos$ 那一列剛好左右顛倒——這就是下面的互餘關係。忘記時回去畫 $1:\\sqrt3:2$ 與 $1:1:\\sqrt2$ 兩個三角形，比硬背可靠。",
+          fig: "trig-special",
+          t: "把 $\\tan30^\\circ$ 與 $\\tan60^\\circ$ 對調。"
+        },
+        {
+          n: "sin 與 cos 的互餘關係",
+          f: "\\begin{aligned}&\\sin(90^\\circ-\\theta)=\\cos\\theta \\\\ &\\cos(90^\\circ-\\theta)=\\sin\\theta\\end{aligned}",
+          w: "兩個角互餘（和為 $90^\\circ$），或要把 $\\sin$ 換成 $\\cos$ 時。例：$\\sin60^\\circ=\\cos30^\\circ$；$\\cos20^\\circ=\\sin70^\\circ$。",
+          l: "直角三角形的兩個銳角互餘：$\\angle A$ 的對邊正好是 $\\angle B$ 的鄰邊，所以 $\\sin A=\\cos B$。這裡的 $\\theta$ 是銳角（$0^\\circ < \\theta < 90^\\circ$）。",
+          fig: "trig-cofunction",
+          t: "寫成 $\\sin(90^\\circ-\\theta)=\\sin\\theta$；或以為 $\\sin A=\\cos B$ 就表示 $A=B$。"
+        },
+        {
+          n: "tan ＝ sin ÷ cos",
+          f: "\\tan\\theta=\\frac{\\sin\\theta}{\\cos\\theta}",
+          w: "已知 $\\sin\\theta$ 與 $\\cos\\theta$ 要求 $\\tan\\theta$ 時。例：$\\sin\\theta=\\dfrac35$、$\\cos\\theta=\\dfrac45$，則 $\\tan\\theta=\\dfrac35\\div\\dfrac45=\\dfrac34$。",
+          l: "理由：$\\dfrac{a}{c}\\div\\dfrac{b}{c}=\\dfrac{a}{b}$，斜邊 $c$ 約掉了，剩下對邊比鄰邊。",
+          fig: "trig-def",
+          t: "上下顛倒，寫成 $\\dfrac{\\cos\\theta}{\\sin\\theta}$。"
+        },
+        {
+          n: "用三角比求邊長",
+          f: "\\begin{aligned}&\\text{對邊}=\\text{斜邊}\\times\\sin\\theta \\\\ &\\text{鄰邊}=\\text{斜邊}\\times\\cos\\theta \\\\ &\\text{對邊}=\\text{鄰邊}\\times\\tan\\theta\\end{aligned}",
+          w: "直角三角形已知一個銳角和一邊、求另一邊。例：$\\angle A=32^\\circ$、斜邊 $10$，題目給 $\\sin32^\\circ\\approx0.53$，對邊 $\\approx10\\times0.53=5.3$。",
+          l: "先判斷「已知的邊」和「要求的邊」對這個角來說是哪兩種（對邊、鄰邊、斜邊），再挑同時含這兩邊的三角比。不是特別角時，題目會給近似值，直接代入即可。",
+          fig: "trig-solve",
+          t: "已知斜邊卻用 $\\tan$；或把「斜邊 $\\times\\sin\\theta$」寫成「斜邊 $\\div\\sin\\theta$」。"
+        },
+        {
+          n: "仰角與俯角（測量高度）",
+          d: "視線與水平線的夾角：目標在水平線上方叫仰角，在下方叫俯角。",
+          f: "\\begin{aligned}&\\text{俯角}=\\text{對方看過來的仰角} \\\\ &\\text{高}=\\text{水平距離}\\times\\tan(\\text{仰角}) \\\\ &\\text{樹高}=\\text{眼高}+d\\tan\\theta\\end{aligned}",
+          w: "測樓高、樹高、山高，或從高處看地面物體求距離。例：離樓 $30$ 公尺處測得樓頂仰角 $60^\\circ$（不計眼高），樓高 $=30\\tan60^\\circ=30\\sqrt3$ 公尺。",
+          l: "仰角、俯角都從「水平線」量起，不是從鉛垂線。兩條水平線互相平行，所以 B 看 A 的俯角等於 A 看 B 的仰角（內錯角相等），俯角題就能搬到地面上的直角三角形來算。題目說人眼離地多高時，算出的高度要再加上眼高。兩個觀測點的題目：設高為 $h$，把兩段水平距離都用 $h$ 表示再相減。",
+          fig: "trig-elevation",
+          t: "把俯角畫在視線與牆面（鉛垂線）之間；或忘了加眼高。"
+        },
+        {
+          n: "三角形面積 ½ab·sin C",
+          f: "\\begin{aligned}&h=b\\sin C \\\\ &\\text{面積}=\\frac12ab\\sin C\\end{aligned}",
+          w: "已知兩邊和它們的「夾角」求三角形面積。例：$a=6$、$b=8$、夾角 $C=30^\\circ$，面積 $=\\dfrac12\\times6\\times8\\times\\dfrac12=12$。",
+          l: "角一定要是兩邊的夾角。國中的夾角只用銳角；夾角是直角時，兩邊就是底和高，面積直接是 $\\dfrac12ab$。",
+          fig: "trig-area",
+          x: "平行四邊形兩鄰邊 $a$、$b$ 夾銳角 $\\theta$：對角線切成兩個全等三角形，面積 $=ab\\sin\\theta$。",
+          t: "忘了乘 $\\dfrac12$；或拿不是夾角的角代進去。"
         }
       ]
     }
