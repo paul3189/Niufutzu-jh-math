@@ -1,0 +1,443 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>讀書習慣教練卡</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=LXGW+WenKai+TC:wght@400;700&family=Noto+Sans+TC:wght@400;500;700&display=swap">
+<style>
+/* 版面概念：一本隨身的「教練卡」— 左手檢核、右手目標；卡片只用在要被操作的東西上 */
+:root{
+  --bg:#f5f2ea; --card:#fffdf7; --fg:#1f2430; --muted:#6b7180; --line:#dcd6c8;
+  --accent:#1f6f8b; --accent-soft:#e3eff4; --mark:#d9822b; --mark-soft:#fbeedd;
+  --ok:#2f8f5b; --warn:#c79a1c; --bad:#c23f3f;
+  --display:"LXGW WenKai TC","Noto Sans TC","Microsoft JhengHei",sans-serif;
+  --body:"Noto Sans TC","Microsoft JhengHei",system-ui,sans-serif;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#171a20; --card:#20252d; --fg:#e9e6de; --muted:#9aa1ad; --line:#333a45;
+  --accent:#74b6cc; --accent-soft:#1d2f37; --mark:#eaa45e; --mark-soft:#3a2b18;
+  --ok:#5fc08a; --warn:#e0b84a; --bad:#e26b6b; color-scheme:dark } }
+:root[data-theme="dark"]{
+  --bg:#171a20; --card:#20252d; --fg:#e9e6de; --muted:#9aa1ad; --line:#333a45;
+  --accent:#74b6cc; --accent-soft:#1d2f37; --mark:#eaa45e; --mark-soft:#3a2b18;
+  --ok:#5fc08a; --warn:#e0b84a; --bad:#e26b6b; color-scheme:dark }
+
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:16px;line-height:1.7}
+.wrap{max-width:820px;margin:0 auto;padding-inline:16px;padding-block:20px 60px}
+h1{font-family:var(--display);font-size:2rem;margin:0;line-height:1.2;text-wrap:balance}
+h2{font-family:var(--display);font-size:1.35rem;margin:26px 0 8px;text-wrap:balance}
+h3{font-size:1rem;margin:16px 0 6px}
+p{margin:6px 0}
+.sub{color:var(--muted);font-size:.95rem}
+small,.small{font-size:.85rem;color:var(--muted)}
+button{font:inherit;cursor:pointer;border-radius:8px;border:1px solid var(--line);background:var(--card);color:var(--fg);padding:6px 12px}
+button:hover{border-color:var(--accent)}
+button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,.seg button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+button.primary{background:var(--accent);color:#fff;border-color:var(--accent)}
+button.ghost{background:transparent}
+button.small{padding:3px 9px;font-size:.85rem}
+input,select,textarea{font:inherit;color:var(--fg);background:var(--card);border:1px solid var(--line);border-radius:8px;padding:6px 8px}
+input[type=number]{width:5.5em;font-variant-numeric:tabular-nums}
+
+/* 頂部摘要 */
+.strip{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:18px 0 6px}
+.stat{border-top:3px solid var(--accent);padding:8px 2px 0}
+.stat b{display:block;font-size:1.5rem;font-variant-numeric:tabular-nums;line-height:1.2}
+.stat span{font-size:.82rem;color:var(--muted)}
+.stat.mark{border-top-color:var(--mark)}
+.stat.ok{border-top-color:var(--ok)}
+
+/* 分頁 */
+.tabs{display:flex;gap:6px;flex-wrap:wrap;position:sticky;top:env(safe-area-inset-top,0px);background:var(--bg);padding:10px 0;z-index:5;border-bottom:1px solid var(--line)}
+.tabs button{border-radius:999px}
+.tabs button[aria-selected="true"]{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+section[role=tabpanel]{padding-top:6px}
+
+/* 檢核表 */
+.area{margin:18px 0 4px;display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.area h3{margin:0;font-family:var(--display);font-size:1.15rem}
+.area .bar{flex:1;min-width:120px;height:6px;background:var(--line);border-radius:3px;overflow:hidden}
+.area .bar i{display:block;height:100%;background:var(--ok);width:0}
+.item{display:grid;grid-template-columns:1fr auto;gap:8px 12px;align-items:start;padding:9px 0;border-bottom:1px dashed var(--line)}
+.item .t{font-weight:500}
+.item .why{font-size:.86rem;color:var(--muted)}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:999px;overflow:hidden}
+.seg button{border:0;border-radius:0;padding:4px 10px;font-size:.85rem;background:transparent}
+.seg button+button{border-left:1px solid var(--line)}
+.seg button[data-v="2"][aria-pressed="true"]{background:var(--ok);color:#fff}
+.seg button[data-v="1"][aria-pressed="true"]{background:var(--warn);color:#1f2430}
+.seg button[data-v="0"][aria-pressed="true"]{background:var(--bad);color:#fff}
+@media (max-width:480px){.item{grid-template-columns:1fr}.strip{gap:6px}.stat b{font-size:1.25rem}}
+
+/* 診斷 */
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin:12px 0}
+.errgrid{display:grid;grid-template-columns:1fr auto;gap:6px 12px;align-items:center}
+.errgrid label{font-size:.95rem}
+.errgrid .hint{font-size:.8rem;color:var(--muted);display:block}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.row>*{min-width:0}
+.diag{border-left:4px solid var(--mark);padding:10px 14px;margin:10px 0;background:var(--mark-soft);border-radius:0 10px 10px 0}
+.diag b{display:block}
+.diag .because{font-size:.88rem;color:var(--muted)}
+.pill{display:inline-block;font-size:.78rem;padding:1px 8px;border-radius:999px;background:var(--accent-soft);color:var(--accent);margin-right:4px}
+.pill.bad{background:var(--mark-soft);color:var(--mark)}
+table{border-collapse:collapse;width:100%;font-size:.92rem}
+td,th{padding:5px 6px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+th{font-weight:500;color:var(--muted)}
+td.n{text-align:right;font-variant-numeric:tabular-nums}
+.tablewrap{overflow-x:auto}
+
+/* 目標 */
+.goal{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin:10px 0}
+.goal .gt{font-weight:700;font-family:var(--display);font-size:1.1rem}
+.goal .act{margin:4px 0 8px}
+.days{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;max-width:420px}
+.days button{padding:8px 0;font-size:.85rem;border-radius:8px}
+.days button[aria-pressed="true"]{background:var(--ok);color:#fff;border-color:var(--ok)}
+.progress{height:8px;background:var(--line);border-radius:4px;overflow:hidden;margin:8px 0 4px;max-width:420px}
+.progress i{display:block;height:100%;background:var(--accent);width:0;transition:width .3s}
+@media (prefers-reduced-motion:reduce){.progress i{transition:none}}
+.done{border-color:var(--ok)}
+.badge{display:inline-block;background:var(--ok);color:#fff;border-radius:999px;padding:2px 10px;font-size:.85rem}
+.empty{color:var(--muted);border:1px dashed var(--line);border-radius:10px;padding:14px;text-align:center}
+.toast{position:fixed;left:50%;bottom:calc(18px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--fg);color:var(--bg);padding:8px 16px;border-radius:999px;font-size:.9rem;opacity:0;pointer-events:none;transition:opacity .25s}
+.toast.show{opacity:1}
+details{margin:8px 0}
+summary{cursor:pointer;font-weight:500}
+ol.refs{font-size:.86rem;color:var(--muted);padding-left:1.3em}
+textarea{width:100%;min-height:90px;font-family:ui-monospace,monospace;font-size:.8rem}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>讀書習慣教練卡</h1>
+  <p class="sub">先看自己哪些習慣沒做到，再用考卷上的錯題找出最該改的那一件，一週只改一件小事。</p>
+
+  <div class="strip">
+    <div class="stat"><b id="sCheck">—</b><span>檢核表做到的比例</span></div>
+    <div class="stat mark"><b id="sGoals">0</b><span>進行中的小目標</span></div>
+    <div class="stat ok"><b id="sBadges">0</b><span>已達成的小目標</span></div>
+  </div>
+
+  <div class="tabs" role="tablist">
+    <button role="tab" data-tab="check" aria-selected="true">① 習慣檢核</button>
+    <button role="tab" data-tab="diag" aria-selected="false">② 考後診斷</button>
+    <button role="tab" data-tab="goals" aria-selected="false">③ 本週小目標</button>
+    <button role="tab" data-tab="about" aria-selected="false">秘訣與依據</button>
+  </div>
+
+  <!-- ① 檢核 -->
+  <section role="tabpanel" id="tab-check">
+    <p class="sub">每週做一次就好。誠實選：<b>常做到</b>／<b>有時</b>／<b>沒做到</b>。紅色的就是你目前的破口。</p>
+    <div class="row" style="margin:8px 0">
+      <button class="small" id="btnCheckReset">全部清空重填</button>
+      <span class="small" id="checkDate"></span>
+    </div>
+    <div id="checkList"></div>
+  </section>
+
+  <!-- ② 診斷 -->
+  <section role="tabpanel" id="tab-diag" hidden>
+    <p class="sub">考完試把錯題一題一題歸類。錯的類型會對應到檢核表裡的習慣，告訴你最該先改哪一件。</p>
+    <div class="card">
+      <div class="row">
+        <input type="date" id="tDate">
+        <input type="text" id="tName" placeholder="考試名稱，例如：一段數學" style="flex:1;min-width:160px">
+        <label>分數 <input type="number" id="tScore" min="0" max="100" placeholder="85"></label>
+      </div>
+      <h3>每種錯法各有幾題？</h3>
+      <div class="errgrid" id="errGrid"></div>
+      <div class="row" style="margin-top:12px">
+        <button class="primary" id="btnAddTest">記錄這次考試並診斷</button>
+        <span class="small">錯題總數會自動加總</span>
+      </div>
+    </div>
+
+    <h2>診斷結果</h2>
+    <p class="sub">綜合最近三次考試的錯題，加上檢核表裡標「沒做到」的項目。</p>
+    <div id="diagBox"><div class="empty">還沒有考試紀錄。先在上面記一次考試。</div></div>
+
+    <h2>考試紀錄</h2>
+    <div class="tablewrap"><table id="testTable"><thead><tr><th>日期</th><th>考試</th><th>分數</th><th>錯題</th><th>最多的錯法</th><th></th></tr></thead><tbody></tbody></table></div>
+  </section>
+
+  <!-- ③ 目標 -->
+  <section role="tabpanel" id="tab-goals" hidden>
+    <p class="sub">一次最多三個。每個目標只要一週做到 5 天就算達成，達成了再換下一個。小步走，比一次全改有效。</p>
+    <div class="row" style="margin:8px 0">
+      <select id="goalPick" style="flex:1;min-width:200px"></select>
+      <button class="primary" id="btnAddGoal">加入小目標</button>
+    </div>
+    <div id="goalList"></div>
+    <h2>已達成</h2>
+    <div id="doneList"><div class="empty">還沒有。達成第一個就會出現在這裡。</div></div>
+  </section>
+
+  <!-- 說明 -->
+  <section role="tabpanel" id="tab-about" hidden>
+    <h2>這張卡怎麼用</h2>
+    <ol>
+      <li><b>每週一次檢核</b>：花 3 分鐘，誠實勾。目的不是打分數，是看見自己哪裡沒做。</li>
+      <li><b>每次考完就歸類錯題</b>：拿著考卷，一題一題問「我為什麼錯？」十種錯法裡選一個。同一題只算一種。</li>
+      <li><b>只改一件事</b>：診斷會排出最該改的習慣，挑一個當本週小目標。做到 5 天就達成，換下一個。</li>
+      <li><b>下次考完再看</b>：如果同一種錯法變少了，代表這個習慣有效；沒變，就回來換另一個。</li>
+    </ol>
+    <h2>老師最常看到的破口</h2>
+    <ul>
+      <li>訂正只抄一次正確解，沒有蓋起來重做，下次考同一種還是錯。</li>
+      <li>寫作業卡住立刻翻解答或問 AI，看懂了就以為會了。考試時第一次自己想，當然想不出來。</li>
+      <li>「看錯條件」和「算錯」加起來常常佔一半以上的失分，但學生都說是粗心，沒有針對它練。</li>
+      <li>考前一晚熬夜背公式。睡眠不夠，記憶反而存不進去。</li>
+      <li>計畫寫「讀數學」，沒寫「做哪一頁、幾題」。太模糊的目標做不到。</li>
+    </ul>
+    <h2>研究依據</h2>
+    <p class="sub">卡片上的每一條習慣都有出處，這裡列主要的幾個。</p>
+    <ol class="refs">
+      <li>Dunlosky 等（2013）：比較十種學習法，「自我測驗」與「分散練習」效果最好，「畫重點」「重讀」效果最差。</li>
+      <li>Roediger 與 Karpicke（2006）：讀完後自己回想（測驗效應），比再讀一次記得久。</li>
+      <li>Cepeda 等（2006）：同樣的練習時間，隔幾天分開做，長期記憶明顯優於一次做完。</li>
+      <li>Rohrer 與 Taylor（2007）：數學題型混著練（交錯練習），考試表現高於一種題型練到熟再換。</li>
+      <li>Bjork：適度的困難（先自己想再看解答）讓學習更牢固。</li>
+      <li>Metcalfe（2017）：訂正時弄清楚「為什麼錯」，比只知道正確答案更能避免再錯。</li>
+      <li>Locke 與 Latham：具體、可達成的小目標比模糊的大目標更能持續執行。</li>
+      <li>Walker 等：睡眠是記憶固化的關鍵，考前熬夜會抵銷讀書的效果。</li>
+      <li>Ward 等（2017）：手機只是放在桌上，就會佔用注意力，即使沒有拿起來。</li>
+    </ol>
+    <h2>備份與還原</h2>
+    <p class="sub">資料只存在這台裝置的瀏覽器裡。換手機或清除資料前，先複製備份碼。</p>
+    <div class="row"><button class="small" id="btnExport">產生備份碼</button><button class="small" id="btnImport">用下面的備份碼還原</button><button class="small" id="btnWipe">清除全部資料</button></div>
+    <textarea id="backup" placeholder="備份碼會出現在這裡；還原時把備份碼貼進來再按「還原」"></textarea>
+  </section>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+/* ───────── 資料：習慣 ───────── */
+const AREAS = [
+ {k:'A',name:'上課'},{k:'B',name:'當天複習'},{k:'C',name:'寫作業與練習'},{k:'D',name:'訂正與錯題'},
+ {k:'E',name:'考試技巧'},{k:'F',name:'計畫與時間'},{k:'G',name:'身心與環境'}
+];
+// id, 區, 習慣, 為什麼(研究/老師經驗), 一週小目標(具體行動)
+const HABITS = [
+ ['A1','A','上課前花 3 分鐘翻今天要教的標題和例題','有輪廓再聽，聽得懂的比例差很多。','每天上課前翻課本 3 分鐘，看標題和第一個例題。'],
+ ['A2','A','聽不懂的地方馬上做記號，當天問老師或同學','問題過夜就忘了自己哪裡卡住。','每天下課前把記號的問題至少問一個。'],
+ ['A3','A','筆記寫「為什麼這樣做」，不只抄過程','只抄過程的筆記，回家看不懂。','每堂課的筆記至少寫一句「這步是因為…」。'],
+ ['A4','A','上課時手機不在桌上','手機放桌上就會分走注意力（Ward 2017）。','上課手機全程收進書包。'],
+ ['B1','B','當天晚上不看講義，把今天教的內容說一遍或寫下來','回想比重讀有效（測驗效應）。','每天睡前 10 分鐘，蓋住講義回想今天的重點。'],
+ ['B2','B','回家先蓋住解答重做課堂例題，再寫作業','例題會了，作業才有基礎。','每天寫作業前先重做 2 題課堂例題。'],
+ ['B3','B','學過的東西隔天、三天後、一週後再看一次','分散複習的長期記憶遠勝一次讀完。','這週把上週教的內容回頭做 5 題。'],
+ ['C1','C','寫作業卡住先自己想 5 分鐘，再看解答','先掙扎再看，記得住（適度困難）。','每題卡住先想 5 分鐘再翻解答，做到 5 天。'],
+ ['C2','C','用草稿紙，計算分區、寫整齊，不心算跳步','算錯多半來自跳步和亂寫。','每天作業都用草稿紙，一題一格。'],
+ ['C3','C','練習時混著做不同題型，不只練同一種','混著練才學得會「判斷這題用哪招」。','這週每天做 3 題不同單元的混合題。'],
+ ['C4','C','做題時計時，練習在時間內做完','平時不計時，考試時間就不夠。','這週有 3 次做題計時，每題不超過 3 分鐘。'],
+ ['C5','C','寫完先自己對答案，錯的標記起來','沒對答案，錯的會一直錯下去。','每天作業寫完馬上對答案並標記錯題。'],
+ ['C6','C','不直接抄解答或 AI 的答案','看懂不等於會做，考試時沒得看。','這週作業全部先自己寫完再核對。'],
+ ['D1','D','每題錯題寫下「錯在哪一步、為什麼」','弄清楚原因才不會再錯（Metcalfe 2017）。','每題錯題旁邊寫一句錯因，做到 5 天。'],
+ ['D2','D','錯題三天後蓋住重做一次','重做才知道是真的會了。','這週把上次考卷的錯題蓋住重做一遍。'],
+ ['D3','D','錯題持續收集，考前重做一輪','考前最有效的複習是自己的錯題。','這週建立錯題本，收進至少 5 題。'],
+ ['D4','D','把錯誤分類（看錯、算錯、不會）並統計','知道自己哪種錯最多，才能針對練。','這週每次訂正都標上錯誤類型。'],
+ ['E1','E','先讀完整題，圈出關鍵條件和「求什麼」','看錯條件是失分第一名。','這週每題都先圈條件再動筆，做到 5 天。'],
+ ['E2','E','先做會的，難題標記後跳過，最後再回來','卡在一題，後面會的都沒時間寫。','下次練習卷照「先易後難」的順序做。'],
+ ['E3','E','留 5 分鐘檢查：代回驗算、看單位和正負號','檢查能撿回的分數常常超過 5 分。','這週每次寫完作業都花 3 分鐘代回檢查。'],
+ ['E4','E','答案寫清楚：格子、單位、正負號，選擇題不留白','會做卻沒分，最可惜。','這週每張練習卷交前檢查一次答案格。'],
+ ['F1','F','每週日排下週計畫，寫到「哪天做哪幾頁」','具體的目標才做得到（Locke & Latham）。','這週日花 10 分鐘寫下週的具體計畫。'],
+ ['F2','F','用 25 分鐘專注加 5 分鐘休息的方式讀','一次讀 2 小時，後半段幾乎沒效。','每天用 25 分鐘計時讀數學，至少 1 輪。'],
+ ['F3','F','每天固定時間讀數學，就算只有 20 分鐘','習慣靠固定時間，不靠意志力。','這週每天同一個時間讀數學 20 分鐘。'],
+ ['F4','F','考前一週開始複習，不考前一晚才讀','一晚塞進去的，考完就忘。','考前 7 天開始，每天複習一個單元。'],
+ ['F5','F','把小目標寫下來，做到就打勾','看得見進度，才撐得下去。','這週每天在這張卡上打勾。'],
+ ['G1','G','每天睡滿 8 小時，考前不熬夜','睡眠是把記憶存進去的時候。','這週每天 11 點前睡。'],
+ ['G2','G','讀書時手機放另一個房間或收進包包','看得到手機就會想拿。','讀書時手機放客廳，做到 5 天。'],
+ ['G3','G','固定的讀書位置，桌面清空','環境固定，腦袋比較快進入狀態。','每天讀書前先清桌面 1 分鐘。'],
+ ['G4','G','不會就求助，不放著','放著的問題會滾成一大堆。','這週至少問老師或同學 2 個問題。']
+].map(a=>({id:a[0],area:a[1],t:a[2],why:a[3],goal:a[4]}));
+const HMAP = Object.fromEntries(HABITS.map(h=>[h.id,h]));
+
+/* ───────── 資料：錯法 → 習慣 ───────── */
+const ERRS = [
+ {k:'read', t:'看錯或漏看條件', hint:'題目有講，我沒看到或看反了', map:{E1:3,E3:2,C2:1}},
+ {k:'calc', t:'計算錯誤', hint:'方法對，算出來的數字錯', map:{C2:3,E3:2,D4:1}},
+ {k:'concept', t:'觀念不懂', hint:'這題我根本不知道在問什麼', map:{A2:3,B1:2,B2:2,G4:2,A3:1}},
+ {k:'formula', t:'公式或定義記不清', hint:'知道要用什麼，但記錯或想不起來', map:{B1:3,B3:2,D3:1}},
+ {k:'time', t:'時間不夠沒寫到', hint:'會做，但沒時間寫', map:{C4:3,E2:3,C3:1}},
+ {k:'forgot', t:'看過類似的題，想不起解法', hint:'有印象練過，考試時就是想不出來', map:{B3:3,D2:3,D3:2,C3:1}},
+ {k:'hard', t:'題目太難，不知道怎麼拆', hint:'整合好幾個觀念，不知道從哪裡下手', map:{C1:3,C3:2,A3:1,D1:1}},
+ {k:'write', t:'寫錯格、漏單位、正負號寫錯', hint:'答案其實對，最後一步寫錯', map:{E4:3,E3:2,C5:1}},
+ {k:'unknown', t:'不知道自己為什麼錯', hint:'訂正時看解答也看不出差在哪', map:{D1:3,D4:2,G4:2}},
+ {k:'missed', t:'上課教過，當時沒聽懂也沒問', hint:'那天恍神、或不好意思問', map:{A2:3,A4:2,A1:1}}
+];
+const EMAP = Object.fromEntries(ERRS.map(e=>[e.k,e]));
+
+/* ───────── 儲存 ───────── */
+const KEY='coach-card-v1';
+let S = {check:{}, checkDate:'', tests:[], goals:[], done:[]};
+function load(){ try{ const j=localStorage.getItem(KEY); if(j) S=Object.assign(S, JSON.parse(j)); }catch(e){} }
+function save(){ try{ localStorage.setItem(KEY, JSON.stringify(S)); }catch(e){} }
+function today(){ const d=new Date(); return d.toISOString().slice(0,10); }
+function toast(m){ const t=document.getElementById('toast'); t.textContent=m; t.classList.add('show'); clearTimeout(t._h); t._h=setTimeout(()=>t.classList.remove('show'),1800); }
+function esc(s){ return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+
+/* ───────── 分頁 ───────── */
+document.querySelectorAll('.tabs [role=tab]').forEach(b=>b.addEventListener('click',()=>showTab(b.dataset.tab)));
+function showTab(k){
+  document.querySelectorAll('.tabs [role=tab]').forEach(b=>b.setAttribute('aria-selected', b.dataset.tab===k));
+  document.querySelectorAll('section[role=tabpanel]').forEach(s=>s.hidden = s.id!=='tab-'+k);
+}
+if(/^#(check|diag|goals|about)$/.test(location.hash)) showTab(location.hash.slice(1));
+
+/* ───────── ① 檢核 ───────── */
+function renderCheck(){
+  const box=document.getElementById('checkList'); box.innerHTML='';
+  AREAS.forEach(a=>{
+    const hs=HABITS.filter(h=>h.area===a.k);
+    const got=hs.reduce((n,h)=>n+(S.check[h.id]===2?1:S.check[h.id]===1?0.5:0),0);
+    const head=document.createElement('div'); head.className='area';
+    head.innerHTML=`<h3>${a.name}</h3><div class="bar"><i style="width:${Math.round(got/hs.length*100)}%"></i></div><small>${got}／${hs.length}</small>`;
+    box.appendChild(head);
+    hs.forEach(h=>{
+      const v=S.check[h.id];
+      const el=document.createElement('div'); el.className='item';
+      el.innerHTML=`<div><div class="t">${esc(h.t)}</div><div class="why">${esc(h.why)}</div></div>
+        <div class="seg" role="group" aria-label="${esc(h.t)}">
+          <button data-v="2" aria-pressed="${v===2}">常做到</button><button data-v="1" aria-pressed="${v===1}">有時</button><button data-v="0" aria-pressed="${v===0}">沒做到</button></div>`;
+      el.querySelectorAll('.seg button').forEach(b=>b.addEventListener('click',()=>{
+        S.check[h.id]=+b.dataset.v; S.checkDate=today(); save(); renderCheck(); renderStats(); renderDiag(); }));
+      box.appendChild(el);
+    });
+  });
+  document.getElementById('checkDate').textContent = S.checkDate ? '上次填寫：'+S.checkDate : '還沒填過';
+}
+document.getElementById('btnCheckReset').addEventListener('click',()=>{ S.check={}; S.checkDate=''; save(); renderCheck(); renderStats(); renderDiag(); toast('已清空'); });
+
+/* ───────── ② 診斷 ───────── */
+(function buildErrGrid(){
+  const g=document.getElementById('errGrid');
+  ERRS.forEach(e=>{
+    g.insertAdjacentHTML('beforeend',`<label for="err-${e.k}">${esc(e.t)}<span class="hint">${esc(e.hint)}</span></label><input type="number" min="0" max="60" id="err-${e.k}" value="0">`);
+  });
+  document.getElementById('tDate').value=today();
+})();
+document.getElementById('btnAddTest').addEventListener('click',()=>{
+  const errs={}; let total=0;
+  ERRS.forEach(e=>{ const n=Math.max(0,parseInt(document.getElementById('err-'+e.k).value)||0); if(n){errs[e.k]=n; total+=n;} });
+  if(!total){ toast('先填至少一種錯法的題數'); return; }
+  const sc=document.getElementById('tScore').value;
+  S.tests.unshift({date:document.getElementById('tDate').value||today(), name:document.getElementById('tName').value.trim()||'未命名', score:sc===''?null:+sc, errs});
+  S.tests=S.tests.slice(0,30); save();
+  ERRS.forEach(e=>document.getElementById('err-'+e.k).value=0);
+  document.getElementById('tName').value=''; document.getElementById('tScore').value='';
+  renderDiag(); renderTests(); toast('已記錄，往下看診斷');
+});
+function topErr(errs){ let k=null,m=0; for(const e in errs){ if(errs[e]>m){m=errs[e];k=e;} } return k?EMAP[k].t+'（'+m+' 題）':'—'; }
+function renderTests(){
+  const tb=document.querySelector('#testTable tbody'); tb.innerHTML='';
+  S.tests.forEach((t,i)=>{
+    const total=Object.values(t.errs).reduce((a,b)=>a+b,0);
+    const tr=document.createElement('tr');
+    tr.innerHTML=`<td>${esc(t.date)}</td><td>${esc(t.name)}</td><td class="n">${t.score==null?'—':t.score}</td><td class="n">${total}</td><td>${esc(topErr(t.errs))}</td><td><button class="small ghost" aria-label="刪除">✕</button></td>`;
+    tr.querySelector('button').addEventListener('click',()=>{ S.tests.splice(i,1); save(); renderTests(); renderDiag(); });
+    tb.appendChild(tr);
+  });
+  if(!S.tests.length) tb.innerHTML='<tr><td colspan="6" class="small">還沒有紀錄</td></tr>';
+}
+function diagnose(){
+  const score={}, why={};
+  const add=(hid,w,reason)=>{ score[hid]=(score[hid]||0)+w; (why[hid]=why[hid]||new Set()).add(reason); };
+  S.tests.slice(0,3).forEach(t=>{
+    for(const k in t.errs){ const e=EMAP[k]; if(!e) continue;
+      for(const hid in e.map) add(hid, e.map[hid]*t.errs[k], `${t.errs[k]} 題「${e.t}」`); }
+  });
+  HABITS.forEach(h=>{ if(S.check[h.id]===0) add(h.id, 4, '檢核表標「沒做到」'); else if(S.check[h.id]===1) add(h.id,1.5,'檢核表標「有時」'); });
+  // 已做到的習慣不再建議
+  return Object.keys(score).filter(id=>S.check[id]!==2).sort((a,b)=>score[b]-score[a]).map(id=>({h:HMAP[id],s:score[id],why:[...why[id]]}));
+}
+function renderDiag(){
+  const box=document.getElementById('diagBox');
+  const r=diagnose();
+  if(!r.length){ box.innerHTML='<div class="empty">還沒有考試紀錄或檢核結果。記一次考試，或先填檢核表。</div>'; return; }
+  const active=new Set(S.goals.map(g=>g.hid));
+  box.innerHTML='';
+  r.slice(0,5).forEach((x,i)=>{
+    const d=document.createElement('div'); d.className='diag';
+    const merged={}; x.why.forEach(w=>{ const m=w.match(/^(\d+) 題「(.+)」$/); if(m){ merged[m[2]]=(merged[m[2]]||0)+ +m[1]; } else merged[w]=0; });
+    const reasons=Object.entries(merged).map(([k,n])=>n?`${n} 題因為「${k}」`:k).join('、');
+    d.innerHTML=`<b>${i+1}. ${esc(x.h.t)}</b><span class="because">${esc(reasons)}</span>
+      <div class="row" style="margin-top:6px"><span class="small">本週小目標：${esc(x.h.goal)}</span>
+      <button class="small ${active.has(x.h.id)?'':'primary'}" ${active.has(x.h.id)?'disabled':''}>${active.has(x.h.id)?'已在目標中':'設為本週目標'}</button></div>`;
+    d.querySelector('button').addEventListener('click',()=>addGoal(x.h.id));
+    box.appendChild(d);
+  });
+}
+
+/* ───────── ③ 目標 ───────── */
+(function buildPick(){
+  const s=document.getElementById('goalPick');
+  AREAS.forEach(a=>{ const og=document.createElement('optgroup'); og.label=a.name;
+    HABITS.filter(h=>h.area===a.k).forEach(h=>{ const o=document.createElement('option'); o.value=h.id; o.textContent=h.goal; og.appendChild(o); });
+    s.appendChild(og); });
+})();
+document.getElementById('btnAddGoal').addEventListener('click',()=>addGoal(document.getElementById('goalPick').value));
+function addGoal(hid){
+  if(S.goals.length>=3){ toast('最多三個。先完成一個再加。'); return; }
+  if(S.goals.some(g=>g.hid===hid)){ toast('這個已經在目標裡了'); return; }
+  S.goals.push({hid, start:today(), days:[false,false,false,false,false,false,false]}); save();
+  renderGoals(); renderStats(); renderDiag(); showTab('goals'); toast('加入了。今天做到就打勾。');
+}
+function renderGoals(){
+  const box=document.getElementById('goalList'); box.innerHTML='';
+  if(!S.goals.length){ box.innerHTML='<div class="empty">還沒有小目標。從上面選一個，或到「考後診斷」讓它幫你挑。</div>'; }
+  S.goals.forEach((g,gi)=>{
+    const h=HMAP[g.hid]; const n=g.days.filter(Boolean).length; const ok=n>=5;
+    const el=document.createElement('div'); el.className='goal'+(ok?' done':'');
+    el.innerHTML=`<div class="gt">${esc(h.goal)}</div><div class="act small">習慣：${esc(h.t)}　·　從 ${esc(g.start)} 開始</div>
+      <div class="days">${g.days.map((d,i)=>`<button aria-pressed="${d}" data-i="${i}">第${i+1}天</button>`).join('')}</div>
+      <div class="progress"><i style="width:${Math.round(n/5*100)}%"></i></div>
+      <div class="row"><span class="small">${n}／5 天${ok?'，達成了！':''}</span>
+        ${ok?'<button class="small primary" data-act="done">收下成就</button>':''}
+        <button class="small ghost" data-act="drop">放棄這個</button></div>`;
+    el.querySelectorAll('.days button').forEach(b=>b.addEventListener('click',()=>{ g.days[+b.dataset.i]=!g.days[+b.dataset.i]; save(); renderGoals(); }));
+    el.querySelector('[data-act=drop]').addEventListener('click',()=>{ S.goals.splice(gi,1); save(); renderGoals(); renderStats(); renderDiag(); });
+    const dn=el.querySelector('[data-act=done]'); if(dn) dn.addEventListener('click',()=>{
+      S.done.unshift({hid:g.hid, date:today(), days:n}); S.goals.splice(gi,1);
+      if(S.check[g.hid]!==2) S.check[g.hid]=2; // 達成後視為做到，檢核表同步更新
+      save(); renderGoals(); renderCheck(); renderStats(); renderDiag(); toast('恭喜！第 '+S.done.length+' 個小目標達成'); });
+    box.appendChild(el);
+  });
+  const dl=document.getElementById('doneList');
+  if(S.done.length){ dl.innerHTML='<div class="tablewrap"><table><tbody>'+S.done.map(d=>`<tr><td>${esc(d.date)}</td><td>${esc(HMAP[d.hid].goal)}</td><td class="n"><span class="badge">${d.days} 天</span></td></tr>`).join('')+'</tbody></table></div>'; }
+}
+
+/* ───────── 摘要 ───────── */
+function renderStats(){
+  const vals=Object.values(S.check); const n=vals.length;
+  const got=vals.reduce((a,v)=>a+(v===2?1:v===1?0.5:0),0);
+  document.getElementById('sCheck').textContent = n? Math.round(got/HABITS.length*100)+'%' : '—';
+  document.getElementById('sGoals').textContent=S.goals.length;
+  document.getElementById('sBadges').textContent=S.done.length;
+}
+
+/* ───────── 備份 ───────── */
+document.getElementById('btnExport').addEventListener('click',()=>{
+  const code=btoa(unescape(encodeURIComponent(JSON.stringify(S))));
+  const ta=document.getElementById('backup'); ta.value=code; ta.select();
+  if(navigator.clipboard&&navigator.clipboard.writeText) navigator.clipboard.writeText(code).then(()=>toast('已複製備份碼'),()=>toast('備份碼在下方，請手動複製'));
+  else toast('備份碼在下方，請手動複製');
+});
+document.getElementById('btnImport').addEventListener('click',()=>{
+  try{ const o=JSON.parse(decodeURIComponent(escape(atob(document.getElementById('backup').value.trim()))));
+    if(!o||typeof o!=='object') throw 0; S=Object.assign({check:{},checkDate:'',tests:[],goals:[],done:[]},o); save(); renderAll(); toast('已還原'); }
+  catch(e){ toast('備份碼不正確'); }
+});
+document.getElementById('btnWipe').addEventListener('click',function(){
+  if(this.dataset.armed){ S={check:{},checkDate:'',tests:[],goals:[],done:[]}; save(); renderAll(); this.textContent='清除全部資料'; delete this.dataset.armed; toast('已清除'); }
+  else { this.dataset.armed='1'; this.textContent='再按一次確認清除'; setTimeout(()=>{ this.textContent='清除全部資料'; delete this.dataset.armed; },4000); }
+});
+
+function renderAll(){ renderCheck(); renderTests(); renderDiag(); renderGoals(); renderStats(); }
+load(); renderAll();
+</script>
+<script src="assets/wb-back.js"></script>
+</body>
+</html>
