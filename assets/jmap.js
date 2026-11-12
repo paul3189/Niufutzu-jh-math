@@ -411,7 +411,7 @@
         label: "國中數學",
         children: doms.map(function (d) {
           return {
-            label: d.icon + " " + d.n, color: d.color, _d: d,
+            label: (d.icon ? d.icon + " " : "") + d.n, color: d.color, _d: d,
             children: (d.topics || []).map(function (t) { return { label: t.n, _d: d, _t: t }; })
           };
         })
@@ -425,7 +425,7 @@
     /* 分支圖：領域 → 主題 → 工具 */
     renderBranch: function (mountId, dom) {
       var root = {
-        label: dom.icon + " " + dom.n,
+        label: (dom.icon ? dom.icon + " " : "") + dom.n,
         children: (dom.topics || []).map(function (t) {
           return {
             label: t.n, color: dom.color, _t: t,
@@ -447,7 +447,7 @@
       if (!mount) return;
       mount.innerHTML = '<div class="lv">' + domains().map(function (d) {
         return '<details class="lv-item" style="border-left-color:' + d.color + '">' +
-          '<summary><span style="color:' + d.color + '">' + d.icon + " " + esc(d.n) + "</span>" +
+          '<summary><span style="color:' + d.color + '">' + (d.icon ? d.icon + " " : "") + esc(d.n) + "</span>" +
           '<span class="lv-n">' + d.topics.length + " 主題</span></summary>" +
           '<div class="lv-body"><p class="lv-ask">' + esc(d.ask) + "</p>" +
           d.topics.map(function (t) {
@@ -512,7 +512,7 @@
           div.innerHTML =
             (r.tool.fig ? '<span class="hit-thumb">' + figSVG(r.tool.fig) + "</span>" : "") +
             '<span class="hit-main"><span class="h-t">' + esc(r.tool.n) + extChip(r.tool) + "</span>" +
-            '<span class="h-p">' + esc(r.dom.icon + " " + r.dom.n + " ▸ " + r.topic.n) + "</span>" +
+            '<span class="h-p">' + esc((r.dom.icon ? r.dom.icon + " " : "") + r.dom.n + " ▸ " + r.topic.n) + "</span>" +
             (r.tool.w ? '<span class="h-w">👉 ' + esc(r.tool.w) + "</span>" : "") + "</span>";
           div.addEventListener("click", function () { openTool(r.tool, r.dom.n + " ▸ " + r.topic.n); });
           list.appendChild(div);
@@ -533,7 +533,7 @@
         a.className = "dom-card";
         a.href = "branch.html#d=" + d.id;
         a.style.borderLeftColor = d.color;
-        a.innerHTML = '<span class="dc-t" style="color:' + d.color + '">' + esc(d.icon + " " + d.n) +
+        a.innerHTML = '<span class="dc-t" style="color:' + d.color + '">' + esc((d.icon ? d.icon + " " : "") + d.n) +
           (d.geo ? '<span class="geo-chip">圖解</span>' : "") + "</span>" +
           '<span class="dc-a">' + esc(d.ask) + "</span>" +
           '<span class="dc-k">🔑 ' + esc((d.topics || []).map(function (t) { return t.n; }).join("・")) + "</span>";
@@ -648,8 +648,8 @@
             '<div class="fig-grid tight">' + cards + "</div>";
         }).join("");
         if (!blocks) return;
-        html += '<h2 class="sec" id="g-' + d.id + '"><span class="tag" style="background:' +
-          d.color + '22;color:' + d.color + '">' + d.icon + "</span>" + esc(d.n) + "</h2>" + blocks;
+        html += '<h2 class="sec" id="g-' + d.id + '">' + (d.icon ? '<span class="tag" style="background:' +
+          d.color + '22;color:' + d.color + '">' + d.icon + "</span>" : "") + esc(d.n) + "</h2>" + blocks;
       });
       mount.innerHTML = html || '<p class="kw-hint">這個年級沒有幾何圖形。</p>';
       mount.querySelectorAll(".fig-card").forEach(function (b) {

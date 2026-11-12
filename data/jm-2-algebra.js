@@ -1,6 +1,6 @@
 /* 領域 2：代數式與規律 */
 TM({
-  id: "algebra", n: "代數式與規律", icon: "✏️", color: "#7d3c6e",
+  id: "algebra", n: "代數式與規律", icon: "", color: "#7d3c6e",
   ask: "題目出現「未知數」「一般情形」「第 n 個」時 —— 先把文字翻成式子，再化簡。",
   topics: [
 

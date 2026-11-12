@@ -1,6 +1,6 @@
 /* 領域 7：圓（幾何．以圖為主） */
 TM({
-  id: "circle", n: "圓", icon: "⭕", color: "#35618e", geo: true,
+  id: "circle", n: "圓", icon: "", color: "#35618e", geo: true,
   ask: "圓的題目幾乎都在問：這個角（或這條線）跟「圓心」是什麼關係？",
   topics: [
 

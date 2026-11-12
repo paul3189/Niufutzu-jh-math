@@ -1,6 +1,6 @@
 /* 領域 3：方程式與不等式 */
 TM({
-  id: "equation", n: "方程式與不等式", icon: "⚖️", color: "#c1443c",
+  id: "equation", n: "方程式與不等式", icon: "", color: "#c1443c",
   ask: "題目給了「等於」或「至少／不超過」時 —— 列出式子，再解出未知數。",
   topics: [
 

@@ -1,6 +1,6 @@
 /* 領域 1：數與量 */
 TM({
-  id: "number", n: "數與量", icon: "🔢", color: "#a8324a",
+  id: "number", n: "數與量", icon: "", color: "#a8324a",
   ask: "題目在處理「數本身」時 —— 先問這個數屬於哪一類，能用哪些運算規則。",
   topics: [
 

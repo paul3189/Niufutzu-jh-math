@@ -113,7 +113,7 @@ document.addEventListener("DOMContentLoaded", function () {
       return d.geo && skipped().indexOf(d.id) === -1 && countFigs(d) > 0;
     }).map(function (d) {
       return '<a href="#g-' + d.id + '" style="border-left:5px solid ' + d.color + '">' +
-        d.icon + " " + d.n + "</a>";
+        (d.icon ? d.icon + " " : "") + d.n + "</a>";
     }).join("");
   }
 

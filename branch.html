@@ -94,7 +94,7 @@ document.addEventListener("DOMContentLoaded", function () {
   document.title = dom.n + "｜國中數學工具地圖";
   document.getElementById("crumb").textContent = "工具地圖 ▸ " + dom.n;
   var h = document.getElementById("domTitle");
-  h.textContent = dom.icon + " " + dom.n;
+  h.textContent = (dom.icon ? dom.icon + " " : "") + dom.n;
   h.style.color = dom.color;
   document.getElementById("domAsk").textContent = dom.ask;
   document.querySelector("#lgTopic i").style.cssText =
@@ -138,7 +138,7 @@ document.addEventListener("DOMContentLoaded", function () {
   var nxt = doms[(idx + 1) % doms.length];
   var a = document.getElementById("nextDom");
   a.href = "branch.html#d=" + nxt.id;
-  a.textContent = nxt.icon + " " + nxt.n + " →";
+  a.textContent = (nxt.icon ? nxt.icon + " " : "") + nxt.n + " →";
   a.onclick = function (e) { e.preventDefault(); location.href = a.href; location.reload(); };
 
   // 若帶 &t=主題，直接開該主題的說明

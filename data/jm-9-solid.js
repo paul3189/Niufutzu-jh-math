@@ -1,6 +1,6 @@
 /* 領域 9：立體圖形與測量（幾何．以圖為主） */
 TM({
-  id: "solid", n: "立體圖形與測量", icon: "🧊", color: "#7a6a2e", geo: true,
+  id: "solid", n: "立體圖形與測量", icon: "", color: "#7a6a2e", geo: true,
   ask: "立體題先問：要「表面積」還是「體積」？前者攤開來算，後者（柱體）用「底面積 × 高」。",
   topics: [
 

@@ -10,7 +10,7 @@ FRAME({
       id: "a", title: "A　畢氏定理本尊、逆定理與特殊直角三角形", type: "table", rowH: 15,
       fields: [{ id: "cond", n: "公式或邊長比" }, { id: "when", n: "看到什麼時用" }, { id: "pre", n: "前提或易錯" }],
       rows: [
-        { id: "1", n: "畢氏定理與常見畢氏數",
+        { id: "1", n: "畢氏定理與常見畢氏數", fig: "pyth-thm",
           ans: {
             cond: "直角三角形兩股 $a$、$b$，斜邊 $c$：$a^2+b^2=c^2$（求斜邊 $c=\\sqrt{a^2+b^2}$，求股 $a=\\sqrt{c^2-b^2}$）；常見整數組 $(3,4,5)$、$(5,12,13)$、$(8,15,17)$、$(7,24,25)$ 及其正整數倍",
             when: "直角三角形已知兩邊求第三邊；或拼圖面積 $(a+b)^2=c^2+4\\times\\dfrac12 ab$",
@@ -22,7 +22,7 @@ FRAME({
             { id: "py1b", q: "直角三角形斜邊 $17$、一股 $8$，另一股 $=$", a: "$15$", val: "15" }
           ]
         },
-        { id: "2", n: "畢氏定理的逆定理", reduce: ["1"], reduceNote: "把①反過來用：由三邊長檢驗有沒有直角",
+        { id: "2", n: "畢氏定理的逆定理", fig: "pyth-conv", reduce: ["1"], reduceNote: "把①反過來用：由三邊長檢驗有沒有直角",
           ans: {
             cond: "三邊長滿足「兩短邊平方和 $=$ 最長邊平方」（$a^2+b^2=c^2$）$\\Rightarrow$ 是直角三角形（$c$ 的對角為 $90^\\circ$）",
             when: "題目給三邊長，問「是不是直角三角形」「哪一個角是直角」或求面積",
@@ -33,7 +33,7 @@ FRAME({
             { id: "py2", q: "三邊長為 $6,8,10$ 的三角形面積為何", a: "$\\dfrac12\\times 6\\times 8=24$（因 $6^2+8^2=10^2$ 為直角三角形）", val: "24" }
           ]
         },
-        { id: "3", n: "兩種特殊直角三角形", reduce: ["1"], reduceNote: "分別把正方形對角線、正三角形切一半代進①推得",
+        { id: "3", n: "兩種特殊直角三角形", fig: "pyth-special", reduce: ["1"], reduceNote: "分別把正方形對角線、正三角形切一半代進①推得",
           ans: {
             cond: "① $45^\\circ\\text{-}45^\\circ\\text{-}90^\\circ$：$1:1:\\sqrt2$（正方形邊長 $a\\Rightarrow$ 對角線 $\\sqrt{2}a$）；② $30^\\circ\\text{-}60^\\circ\\text{-}90^\\circ$：$1:\\sqrt3:2$（正三角形邊長 $a\\Rightarrow$ 高 $\\dfrac{\\sqrt3}{2}a$、面積 $\\dfrac{\\sqrt3}{4}a^2$）",
             when: "圖上出現 $30^\\circ$、$45^\\circ$、$60^\\circ$，或正方形對角線、正三角形的高與面積",
@@ -51,7 +51,7 @@ FRAME({
       id: "b", title: "B　畢氏定理的幾何出口（一）：坐標、立體與四邊形作高", type: "table", rowH: 15,
       fields: [{ id: "tri", n: "直角三角形藏在哪裡（誰是兩股、誰是斜邊）" }, { id: "formula", n: "推出的公式或作法" }, { id: "pre", n: "前提或易錯" }],
       rows: [
-        { id: "4", n: "坐標平面上兩點的距離", reduce: ["1"], reduceNote: "水平差與鉛垂差當兩股，兩點連線當斜邊",
+        { id: "4", n: "坐標平面上兩點的距離", fig: "pyth-coord", reduce: ["1"], reduceNote: "水平差與鉛垂差當兩股，兩點連線當斜邊",
           ans: {
             tri: "過 $A(x_1,y_1)$、$B(x_2,y_2)$ 作水平與鉛垂線：兩股為水平距離 $\\lvert x_2-x_1\\rvert$、鉛垂距離 $\\lvert y_2-y_1\\rvert$，斜邊為 $\\overline{AB}$",
             formula: "$\\overline{AB}=\\sqrt{(x_2-x_1)^2+(y_2-y_1)^2}$",
@@ -62,7 +62,7 @@ FRAME({
             { id: "py4", q: "坐標平面上 $A(-1,2)$ 與 $B(3,-1)$ 的距離 $\\overline{AB}=$", a: "$\\sqrt{4^2+(-3)^2}=5$", val: "5" }
           ]
         },
-        { id: "5", n: "長方體的體對角線", reduce: ["1"], reduceNote: "連續用兩次①：先算底面對角線，再連高算體對角線",
+        { id: "5", n: "長方體的體對角線", fig: "pyth-box", reduce: ["1"], reduceNote: "連續用兩次①：先算底面對角線，再連高算體對角線",
           ans: {
             tri: "第一次：底面長 $\\ell$、寬 $w$ 為兩股，底面對角線 $\\sqrt{\\ell^2+w^2}$ 為斜邊；第二次：底面對角線與高 $h$ 為兩股，體對角線 $d$ 為斜邊",
             formula: "$d=\\sqrt{\\ell^2+w^2+h^2}$（邊長 $a$ 的正方體體對角線為 $\\sqrt{3}a$）",
@@ -73,7 +73,7 @@ FRAME({
             { id: "py5", q: "長 $3$、寬 $4$、高 $12$ 的長方體，體對角線長", a: "$\\sqrt{3^2+4^2+12^2}=13$", val: "13" }
           ]
         },
-        { id: "6", n: "等腰三角形與等腰梯形作高", reduce: ["1"], reduceNote: "作高切出直角三角形，再用①求高",
+        { id: "6", n: "等腰三角形與等腰梯形作高", fig: "pyth-iso", reduce: ["1"], reduceNote: "作高切出直角三角形，再用①求高",
           ans: {
             tri: "等腰三角形作底邊高：底邊一半與高為兩股、腰為斜邊；等腰梯形從上底兩端作高：底差的一半 $\\dfrac{\\text{下底}-\\text{上底}}{2}$ 與高為兩股、腰為斜邊",
             formula: "等腰梯形的高 $h=\\sqrt{\\text{腰}^2-\\left(\\dfrac{\\text{下底}-\\text{上底}}{2}\\right)^2}$",
@@ -90,7 +90,7 @@ FRAME({
       id: "c", title: "延伸（背面）　畢氏定理的幾何出口（二）：圓與錐體", type: "table", back: true, rowH: 13,
       fields: [{ id: "tri", n: "直角三角形藏在哪裡（誰是兩股、誰是斜邊）" }, { id: "formula", n: "推出的公式" }, { id: "pre", n: "前提或易錯" }],
       rows: [
-        { id: "7", n: "圓的弦心距與弦長", reduce: ["1"], reduceNote: "圓心連弦端點得半徑 $r$（斜邊），作弦心距 $d$ 平分弦",
+        { id: "7", n: "圓的弦心距與弦長", fig: "pyth-chord", reduce: ["1"], reduceNote: "圓心連弦端點得半徑 $r$（斜邊），作弦心距 $d$ 平分弦",
           ans: {
             tri: "圓心 $O$ 作垂直於弦 $\\overline{AB}$ 的弦心距 $\\overline{OM}=d$：兩股為弦心距 $d$ 與半弦長 $\\overline{AM}$，斜邊為半徑 $r$",
             formula: "弦長 $\\overline{AB}=2\\sqrt{r^2-d^2}$",
@@ -101,7 +101,7 @@ FRAME({
             { id: "py7", q: "圓半徑 $r=10$、弦心距 $d=6$，則弦長 $=$", a: "$2\\sqrt{10^2-6^2}=16$", val: "16" }
           ]
         },
-        { id: "8", n: "圓外一點的切線段長", reduce: ["1"], reduceNote: "切線垂直於過切點的半徑，直角在切點 $A$",
+        { id: "8", n: "圓外一點的切線段長", fig: "pyth-tan", reduce: ["1"], reduceNote: "切線垂直於過切點的半徑，直角在切點 $A$",
           ans: {
             tri: "自圓外一點 $P$ 作切線切圓於 $A$（$\\angle OAP=90^\\circ$）：兩股為半徑 $r$ 與切線長 $\\overline{PA}$，斜邊為圓心到 $P$ 的距離 $\\overline{OP}$",
             formula: "切線段長 $\\overline{PA}=\\sqrt{\\overline{OP}^2-r^2}$",
@@ -112,7 +112,7 @@ FRAME({
             { id: "py8", q: "圓半徑 $r=5$，$P$ 到圓心距離 $\\overline{OP}=13$，則切線段長 $=$", a: "$\\sqrt{13^2-5^2}=12$", val: "12" }
           ]
         },
-        { id: "9", n: "圓錐的母線與正角錐的斜高", reduce: ["1"], reduceNote: "錐體的高垂直底面，與底面半徑（或底邊心距）構成直角三角形",
+        { id: "9", n: "圓錐的母線與正角錐的斜高", fig: "pyth-cone", reduce: ["1"], reduceNote: "錐體的高垂直底面，與底面半徑（或底邊心距）構成直角三角形",
           ans: {
             tri: "圓錐：錐高 $h$ 與底圓半徑 $r$ 為兩股，側面母線 $\\ell$ 為斜邊；正四角錐：錐高 $h$ 與底面邊長一半 $\\dfrac{a}{2}$ 為兩股，側面三角形的高（斜高）為斜邊",
             formula: "圓錐母線 $\\ell=\\sqrt{r^2+h^2}$（用來算側面積 $\\pi r\\ell$）；正四角錐斜高 $=\\sqrt{\\left(\\dfrac{a}{2}\\right)^2+h^2}$",

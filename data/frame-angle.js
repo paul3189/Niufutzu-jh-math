@@ -10,7 +10,7 @@ FRAME({
       id: "a", title: "A　兩角的基本關係與角平分線（不需平行）", type: "table", rowH: 15,
       fields: [{ id: "cond", n: "定義或圖形特徵" }, { id: "rel", n: "度數關係（相等或相加幾度）" }, { id: "pre", n: "前提或易錯" }],
       rows: [
-        { id: "1", n: "互餘（餘角）",
+        { id: "1", n: "互餘（餘角）", fig: "angle-comp",
           ans: {
             cond: "兩個角的度數和是一個直角（常見於直角被分成兩角，或直角三角形的兩銳角）",
             rel: "$\\angle 1+\\angle 2=90^\\circ$（稱 $\\angle 1$、$\\angle 2$ 互為餘角）",
@@ -21,7 +21,7 @@ FRAME({
             { id: "ag1", q: "$\\angle A=35^\\circ$，則 $\\angle A$ 的餘角幾度", a: "$90^\\circ-35^\\circ=55^\\circ$", val: "55" }
           ]
         },
-        { id: "2", n: "互補（補角）",
+        { id: "2", n: "互補（補角）", fig: "angle-supp",
           ans: {
             cond: "兩個角的度數和是一個平角（圖上最常見的是「同在一直線上」的相鄰兩角）",
             rel: "$\\angle 1+\\angle 2=180^\\circ$（稱 $\\angle 1$、$\\angle 2$ 互為補角）",
@@ -33,7 +33,7 @@ FRAME({
             { id: "ag2b", q: "$\\angle A=40^\\circ$，$\\angle B$ 與 $\\angle A$ 互餘、$\\angle C$ 與 $\\angle B$ 互補，則 $\\angle C=$", a: "$130^\\circ$（$=90^\\circ+40^\\circ$）", val: "130" }
           ]
         },
-        { id: "3", n: "對頂角", reduce: ["2"], reduceNote: "$\\angle 1$ 和 $\\angle 3$ 都與同一個鄰角 $\\angle 2$ 互補（同角的補角相等）",
+        { id: "3", n: "對頂角", fig: "angle-vert", reduce: ["2"], reduceNote: "$\\angle 1$ 和 $\\angle 3$ 都與同一個鄰角 $\\angle 2$ 互補（同角的補角相等）",
           ans: {
             cond: "兩條直線相交於一點，相對（兩邊互為反向延長線）的兩個角",
             rel: "$\\angle 1=\\angle 3$（對頂角必相等）",
@@ -44,7 +44,7 @@ FRAME({
             { id: "ag3", q: "兩直線相交，$\\angle 1=65^\\circ$，則對頂角 $\\angle 3$ 與鄰角 $\\angle 2$ 依序為幾度", a: "$(65^\\circ,115^\\circ)$", val: "(65,115)" }
           ]
         },
-        { id: "4", n: "角平分線",
+        { id: "4", n: "角平分線", fig: "angle-bis",
           ans: {
             cond: "把一個角分成兩個相等角的射線（常在折紙對摺、尺規作圖出現）",
             rel: "射線 $OR$ 平分 $\\angle AOB\\iff \\angle AOR=\\angle BOR=\\dfrac12\\angle AOB$；角平分線上任一點到角兩邊距離相等（八年級尺規與幾何推理、九年級內心都會用到）",
@@ -61,7 +61,7 @@ FRAME({
       id: "b", title: "B　兩直線被截線所截：三種截角（F、Z、C 字）", type: "table", rowH: 16,
       fields: [{ id: "pos", n: "位置怎麼認（截線哪側、兩線之間或同方向）" }, { id: "rel", n: "$L_1\\parallel L_2$ 時的度數關係" }, { id: "pre", n: "前提與逆用（判別平行）" }],
       rows: [
-        { id: "5", n: "同位角（F 字）",
+        { id: "5", n: "同位角（F 字）", fig: "angle-corr",
           ans: {
             pos: "在同一條截線的「同一側」，且在兩被截直線的「同一方向」（如都在左上，形狀像字母 F）",
             rel: "$L_1\\parallel L_2\\Rightarrow$ 同位角相等",
@@ -72,7 +72,7 @@ FRAME({
             { id: "ag5", q: "$L_1\\parallel L_2$，截線與 $L_1$ 左上角為 $72^\\circ$，則與 $L_2$ 左上的同位角幾度", a: "$72^\\circ$", val: "72" }
           ]
         },
-        { id: "6", n: "內錯角（Z 字）", reduce: ["3", "5"], reduceNote: "先用⑤同位角搬過去，再用③對頂角相等，就得到內錯角相等",
+        { id: "6", n: "內錯角（Z 字）", fig: "angle-alt", reduce: ["3", "5"], reduceNote: "先用⑤同位角搬過去，再用③對頂角相等，就得到內錯角相等",
           ans: {
             pos: "在同一條截線的「兩側（交錯）」，且都在兩被截直線「之間（內部）」（形狀像字母 Z 或 N）",
             rel: "$L_1\\parallel L_2\\Rightarrow$ 內錯角相等",
@@ -83,7 +83,7 @@ FRAME({
             { id: "ag6", q: "$L_1\\parallel L_2$，一組內錯角為 $(3x-10)^\\circ$ 與 $(2x+25)^\\circ$，則 $x=$", a: "$35$（兩角皆為 $95^\\circ$）", val: "35" }
           ]
         },
-        { id: "7", n: "同側內角（C／U 字）", reduce: ["2", "5"], reduceNote: "先用⑤同位角搬過去，就跟它在同一條直線上成②鄰角互補",
+        { id: "7", n: "同側內角（C／U 字）", fig: "angle-coint", reduce: ["2", "5"], reduceNote: "先用⑤同位角搬過去，就跟它在同一條直線上成②鄰角互補",
           ans: {
             pos: "在同一條截線的「同一側」，且都在兩被截直線「之間（內部）」（形狀像字母 C 或 U）",
             rel: "$L_1\\parallel L_2\\Rightarrow$ 同側內角互補（相加 $=180^\\circ$，不是相等！）",
@@ -100,7 +100,7 @@ FRAME({
       id: "c", title: "延伸（背面）　平行線間距離、折線轉角與三角形外角", type: "table", back: true, rowH: 13,
       fields: [{ id: "when", n: "看到什麼圖形" }, { id: "how", n: "核心性質或作法" }, { id: "pre", n: "前提或易錯" }],
       rows: [
-        { id: "8", n: "兩平行線間的距離與同底等高",
+        { id: "8", n: "兩平行線間的距離與同底等高", fig: "angle-dist",
           ans: {
             when: "兩平行線 $L_1\\parallel L_2$ 間畫垂直線段，或頂點在平行線上移動的三角形面積",
             how: "$L_1\\parallel L_2\\Rightarrow$ 任一點到另一條的垂直線段長處處相等（高固定 $\\Rightarrow$ 同底三角形面積相等）",
@@ -111,7 +111,7 @@ FRAME({
             { id: "ag8", q: "$L_1\\parallel L_2$ 距離為 $6$，$\\overline{AB}=8$ 在 $L_2$ 上，$P$ 在 $L_1$ 上，則 $\\triangle PAB$ 面積", a: "$\\dfrac12\\times 8\\times 6=24$", val: "24" }
           ]
         },
-        { id: "9", n: "平行線間的折線角（閃電／M 字型）", reduce: ["6", "7"], reduceNote: "過轉折點作平行輔助線，拆成兩組⑥內錯角或⑦同側內角",
+        { id: "9", n: "平行線間的折線角（閃電／M 字型）", fig: "angle-zig", reduce: ["6", "7"], reduceNote: "過轉折點作平行輔助線，拆成兩組⑥內錯角或⑦同側內角",
           ans: {
             when: "兩平行線之間有折線轉彎（拐角、閃電圖、鉛筆頭圖），沒有一條截線直接貫穿",
             how: "過轉折頂點作平行線，把轉折角拆成上下兩個角，分別用內錯角相等（或同側內角互補）搬過來",
@@ -122,7 +122,7 @@ FRAME({
             { id: "ag9", q: "$L_1\\parallel L_2$，折線 $A\\text{-}P\\text{-}B$，$A$ 在 $L_1$ 上、$B$ 在 $L_2$ 上、$P$ 在兩平行線之間，$\\angle A=35^\\circ$、$\\angle B=48^\\circ$（都是折線與平行線在 $P$ 那一側的夾角），則 $\\angle APB=$", a: "$35^\\circ+48^\\circ=83^\\circ$", val: "83" }
           ]
         },
-        { id: "10", n: "三角形內角和與外角定理", reduce: ["2", "5", "6"], reduceNote: "過頂點作對邊的平行線，用⑤同位角與⑥內錯角把兩內角搬到外角處",
+        { id: "10", n: "三角形內角和與外角定理", fig: "angle-ext", reduce: ["2", "5", "6"], reduceNote: "過頂點作對邊的平行線，用⑤同位角與⑥內錯角把兩內角搬到外角處",
           ans: {
             when: "三角形已知兩角求第三角，或圖上有邊「延長出去」出現外角時",
             how: "內角和 $\\angle A+\\angle B+\\angle C=180^\\circ$；外角定理：任一外角 $=$ 不相鄰的兩個內角和",

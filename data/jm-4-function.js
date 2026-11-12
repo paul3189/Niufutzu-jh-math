@@ -1,6 +1,6 @@
 /* 領域 4：坐標與函數 */
 TM({
-  id: "function", n: "坐標與函數", icon: "📈", color: "#c4762a", geo: true,
+  id: "function", n: "坐標與函數", icon: "", color: "#c4762a", geo: true,
   ask: "題目出現「圖形」「隨著…改變」「求交點」時 —— 把關係畫成圖，用圖看答案。",
   topics: [
 

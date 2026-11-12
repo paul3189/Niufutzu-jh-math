@@ -11,7 +11,7 @@ FRAME({
       id: "a", title: "A　柱體與錐體：展開圖、表面積與體積對照表", type: "props", rowH: 28,
       fields: [{ id: "net", n: "展開圖長什麼樣（底面＋側面）" }, { id: "area", n: "表面積 $S$（攤平加總）" }, { id: "vol", n: "體積 $V$ 與前提" }],
       rows: [
-        { id: "1", n: "角柱（含長方體、正方體）",
+        { id: "1", n: "角柱（含長方體、正方體）", fig: "solid-prism",
           ans: {
             net: "上下 $2$ 個全等的 $n$ 邊形底面 $+$ $n$ 個長方形側面（側面全部接在一起是一大片長方形，長 $=$ 底面周長、寬 $=$ 柱高 $h$）",
             area: "$S=2\\times\\text{底面積}+\\text{底面周長}\\times h$；長方體（長 $\\ell$、寬 $w$、高 $h$）$S=2(\\ell w+wh+h\\ell)$",
@@ -23,7 +23,7 @@ FRAME({
             { id: "sd1b", q: "底面為兩股 $3,4$（斜邊 $5$）的直角三角形、柱高 $10$ 的三角柱，體積與表面積依序為", a: "$(60,\\ 132)$", val: "(60,132)" }
           ]
         },
-        { id: "2", n: "圓柱（底半徑 $r$、高 $h$）", reduce: ["1"], reduceNote: "把①的底面換成圓：底面積 $\\pi r^2$、底面周長 $2\\pi r$",
+        { id: "2", n: "圓柱（底半徑 $r$、高 $h$）", fig: "solid-cyl", reduce: ["1"], reduceNote: "把①的底面換成圓：底面積 $\\pi r^2$、底面周長 $2\\pi r$",
           ans: {
             net: "上下 $2$ 個半徑 $r$ 的圓 $+$ $1$ 個長方形側面（長方形的長 $=$ 底圓周長 $2\\pi r$、寬 $=$ 柱高 $h$）",
             area: "$S=2\\pi r^2+2\\pi rh$（兩底圓面積 $+$ 側面長方形面積）",
@@ -34,7 +34,7 @@ FRAME({
             { id: "sd2", q: "底圓半徑 $r=3$、高 $h=5$ 的圓柱，體積與表面積依序為（以 $\\pi$ 表示，填 $\\pi$ 的係數）", a: "$(45\\pi,\\ 48\\pi)$", val: "(45,48)" }
           ]
         },
-        { id: "3", n: "正角錐（底面正 $n$ 邊形）",
+        { id: "3", n: "正角錐（底面正 $n$ 邊形）", fig: "solid-pyr",
           ans: {
             net: "$1$ 個正 $n$ 邊形底面 $+$ $n$ 個全等的等腰三角形側面（側面三角形的高叫「斜高」）",
             area: "$S=\\text{底面積}+n\\times\\left(\\dfrac12\\times\\text{底邊長}\\times\\text{斜高}\\right)$",
@@ -45,7 +45,7 @@ FRAME({
             { id: "sd3", q: "底面邊長 $6$、側面斜高 $5$ 的正四角錐，表面積 $S=$", a: "$6^2+4\\times\\left(\\dfrac12\\times 6\\times 5\\right)=96$", val: "96" }
           ]
         },
-        { id: "4", n: "圓錐（底半徑 $r$、錐高 $h$、母線 $\\ell$）", reduce: ["3"], reduceNote: "側面扇形面積 $\\dfrac12\\times 2\\pi r\\times\\ell=\\pi r\\ell$，和③的 $\\dfrac12\\times\\text{底周長}\\times\\text{斜高}$ 一模一樣",
+        { id: "4", n: "圓錐（底半徑 $r$、錐高 $h$、母線 $\\ell$）", fig: "solid-cone", reduce: ["3"], reduceNote: "側面扇形面積 $\\dfrac12\\times 2\\pi r\\times\\ell=\\pi r\\ell$，和③的 $\\dfrac12\\times\\text{底周長}\\times\\text{斜高}$ 一模一樣",
           ans: {
             net: "$1$ 個半徑 $r$ 的底圓 $+$ $1$ 個扇形側面（扇形半徑 $=$ 母線 $\\ell$，扇形弧長 $=$ 底圓周長 $2\\pi r$，圓心角 $\\theta=360^\\circ\\times\\dfrac{r}{\\ell}$）",
             area: "$S=\\pi r^2+\\pi r\\ell$（底圓面積 $+$ 側面扇形面積）",
@@ -63,7 +63,7 @@ FRAME({
       id: "b", title: "延伸（背面）　空間中的線與平面關係（拿長方體盒子的稜線與面來想）", type: "table", back: true, rowH: 13,
       fields: [{ id: "cond", n: "定義與判定" }, { id: "box", n: "在長方體 $ABCD\\text{-}EFGH$ 上的例子" }, { id: "pre", n: "前提或易錯" }],
       rows: [
-        { id: "5", n: "空間中兩直線：平行與相交（垂直）",
+        { id: "5", n: "空間中兩直線：平行與相交（垂直）", fig: "solid-par",
           ans: {
             cond: "兩直線「在同一個平面上（共面）」時，不相交就平行，相交成 $90^\\circ$ 就垂直",
             box: "同一側面上的 $\\overline{AB}\\parallel\\overline{EF}$；共用頂點 $B$ 的 $\\overline{AB}\\perp\\overline{BC}$",
@@ -74,7 +74,7 @@ FRAME({
             { id: "sd5", q: "長方體 $ABCD\\text{-}EFGH$（$E,F,G,H$ 依序在 $A,B,C,D$ 正下方）的 $12$ 條稜中，與稜 $\\overline{AB}$ 平行的有幾條", a: "$3$ 條（$\\overline{CD},\\overline{EF},\\overline{GH}$）", val: "3" }
           ]
         },
-        { id: "6", n: "空間中兩直線：歪斜（補充）",
+        { id: "6", n: "空間中兩直線：歪斜（補充）", fig: "solid-skew",
           ans: {
             cond: "兩直線「既不平行、也不相交」（找不到任何一個平面同時裝下這兩條線）",
             box: "長方體上 $\\overline{AB}$ 與 $\\overline{CG}$（或 $\\overline{DH}$）：一橫一豎且不相交",
@@ -85,7 +85,7 @@ FRAME({
             { id: "sd6", q: "長方體的 $12$ 條稜線中，與 $\\overline{AB}$ 歪斜的稜線有幾條", a: "$4$ 條（$\\overline{CG},\\overline{DH},\\overline{FG},\\overline{EH}$）", val: "4" }
           ]
         },
-        { id: "7", n: "直線與平面的垂直與平行",
+        { id: "7", n: "直線與平面的垂直與平行", fig: "solid-perp",
           ans: {
             cond: "直線 $L\\perp$ 平面 $E\\iff L$ 與平面 $E$ 上「通過垂足的每一條直線」都垂直（至少要與面上兩條相交直線垂直）；$L\\parallel E\\iff L$ 不在 $E$ 上且與 $E$ 沒有交點",
             box: "高 $\\overline{AE}\\perp$ 底面 $EFGH\\Rightarrow \\overline{AE}\\perp\\overline{EF}$、$\\overline{AE}\\perp\\overline{EH}$ 且 $\\overline{AE}\\perp$ 底面對角線 $\\overline{EG}$",

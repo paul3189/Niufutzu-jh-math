@@ -100,7 +100,7 @@ FRAME({
             { id: "rt7", q: "原價 $1000$ 元的商品，先漲 $20\\%$ 再跌 $20\\%$ 後售價幾元", a: "$1000\\times 1.2\\times 0.8=960$", val: "960" }
           ]
         },
-        { id: "8", n: "平行線截比例線段與相似形面積比", reduce: ["1"], reduceNote: "列出對應邊比例式後，用招①交叉相乘求解",
+        { id: "8", n: "平行線截比例線段與相似形面積比", fig: "ratio-par", reduce: ["1"], reduceNote: "列出對應邊比例式後，用招①交叉相乘求解",
           ans: {
             when: "三角形內有平行截線 $\\overline{DE}\\parallel\\overline{BC}$，或問相似圖形的周長比、面積比",
             how: "① 平行截線：側邊用「部分比部分」$\\overline{AD}:\\overline{DB}=\\overline{AE}:\\overline{EC}$，但底邊要用「部分比全體」$\\overline{DE}:\\overline{BC}=\\overline{AD}:\\overline{AB}$；② 邊長比 $k\\Rightarrow$ 周長比 $k$、面積比 $k^2$",
