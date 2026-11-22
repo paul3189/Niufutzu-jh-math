@@ -174,3 +174,12 @@ table.tools td.t-l { color: var(--red); }
   body { background: #fff; }
   .hero-cow, .cow-say > img, .cow-empty img, .dw-sec .cow-mini, .cow-credit img { display: none; }
 }
+
+/* ── 不用 emoji（老師 11-07 裁定；國中 11-22 照高中 theme-cow.css 抄進來）：功能符號 ✓ ✗ 全站同一種顏色、字型；圖示一律單色線條 svg.ic ── */
+.mk-ok, .mk-no { font-family: "Segoe UI Symbol", "Noto Sans Symbols 2", "Apple Symbols", system-ui, sans-serif; font-weight: 700; font-style: normal; }
+.mk-ok { color: var(--green, #4e7a34); }
+.mk-no { color: var(--red, #b03a55); }
+svg.ic { width: 1em; height: 1em; vertical-align: -.14em; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; flex: 0 0 auto; }
+svg.ic.ic-ok { color: var(--green, #4e7a34); }
+svg.ic.ic-no { color: var(--red, #b03a55); }
+svg.ic.ic-dom { color: var(--cow-wine, #5c222b); margin-right: .3em; }

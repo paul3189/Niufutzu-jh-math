@@ -15,13 +15,13 @@
 <body>
 <div class="topbar"><div class="topbar-inner">
   <a class="cow-brand" href="index.html"><img class="cow-logo" src="assets/mascot/web/cow_stand.png" alt="牛夫子"><span class="brand-t">牛夫子‧國中數學</span></a>
-  <a href="map.html">🗺️ 回總圖</a>
-  <a href="gallery.html">🖼️ 幾何圖解牆</a>
-  <a href="frame.html">🧩 架構重建卡</a>
+  <a href="map.html">回總圖</a>
+  <a href="gallery.html">幾何圖解牆</a>
+  <a href="frame.html">架構重建卡</a>
   <span class="crumb" id="crumb">分支圖</span>
   <span class="spacer"></span>
   <span id="gradeSwitch"></span>
-  <a href="guide.html">📖 使用說明</a>
+  <a href="guide.html">使用說明</a>
 </div></div>
 
 <div class="wrap-wide">
@@ -37,10 +37,10 @@
 
   <div class="mm-shell">
     <div class="mm-bar">
-      <span>🖱️ 點<b>工具</b>看圖、公式、使用時機與限制</span>
+      <span>點<b>工具</b>看圖、公式、使用時機與限制</span>
       <span class="sp"></span>
-      <button id="viewToggle">☰ 改用清單模式</button>
-      <button onclick="window.print()">🖨️ 列印</button>
+      <button id="viewToggle">改用清單模式</button>
+      <button onclick="window.print()">列印</button>
     </div>
     <div class="mm-scroll" id="branchMap"></div>
   </div>
@@ -51,7 +51,7 @@
     <span><i style="background:#fff;border:1.5px solid #cbd5e1"></i>工具（點我）</span>
   </div>
 
-  <h2 class="sec" id="detailHead"><span class="tag tag-keyword">📋</span>工具總表</h2>
+  <h2 class="sec" id="detailHead"><span class="tag tag-keyword">總表</span>工具總表</h2>
   <p class="kw-hint" id="detailHint">建議用法：遮住「工具」欄，只看「什麼時候用」，練習反射性想出該用哪個工具；再遮住「限制」欄，檢查自己會不會踩坑。</p>
   <div class="mm-bar" style="border:1px solid var(--line);border-radius:12px;margin-bottom:6px">
     <span>呈現方式</span>
@@ -114,17 +114,17 @@ document.addEventListener("DOMContentLoaded", function () {
     if (mode === "cards") {
       MathMap.renderFigCards("toolDetail", dom);
       document.getElementById("detailHead").innerHTML =
-        '<span class="tag tag-example">🖼️</span>圖解卡（點卡片看細節）';
+        '<span class="tag tag-example">圖解</span>圖解卡（點卡片看細節）';
       document.getElementById("detailHint").textContent =
         "每張卡片就是一個工具：上面是圖，下面是「什麼時候用」與「限制」。看圖想不起名稱時，正是要複習的地方。";
-      btn.textContent = "📋 改看工具總表";
+      btn.textContent = "改看工具總表";
     } else {
       MathMap.renderToolTable("toolDetail", dom);
       document.getElementById("detailHead").innerHTML =
-        '<span class="tag tag-keyword">📋</span>工具總表（可列印、可遮欄自測）';
+        '<span class="tag tag-keyword">總表</span>工具總表（可列印、可遮欄自測）';
       document.getElementById("detailHint").textContent =
         "建議用法：遮住「工具」欄，只看「什麼時候用」，練習反射性想出該用哪個工具；再遮住「限制」欄，檢查自己會不會踩坑。";
-      btn.textContent = "🖼️ 改看圖解卡";
+      btn.textContent = "改看圖解卡";
     }
   }
   btn.addEventListener("click", function () {

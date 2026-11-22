@@ -368,7 +368,7 @@
         nT += d.topics.length;
         d.topics.forEach(function (t) { nX += t.tools.length; });
       });
-      mount.innerHTML = '<div class="ed-banner"><div class="ed-title">🎒 目前只顯示「' +
+      mount.innerHTML = '<div class="ed-banner"><div class="ed-title">目前只顯示「' +
         GRADE_NAME[g] + '」的內容：' + ds.length + " 個領域、" + nT + " 個主題、" + nX + " 項工具</div>" +
         '<p class="ed-unc">年級是依 108 課綱的一般教學順序標註在 <code>data/jm-*.js</code> 的 <code>g</code> 欄位，' +
         "各校進度略有差異時可自行調整。想看全部內容請切回「全部」。</p></div>";
@@ -383,7 +383,7 @@
         last = m;
         render(m);
         var b = document.getElementById(btnId);
-        if (b) b.textContent = m === "map" ? "☰ 改用清單模式" : "🌳 改用圖表模式";
+        if (b) b.textContent = m === "map" ? "改用清單模式" : "改用圖表模式";
       }
       var b = document.getElementById(btnId);
       if (b) b.addEventListener("click", function () {
@@ -469,12 +469,12 @@
           '<summary><span style="color:' + dom.color + '">▍' + esc(t.n) + "</span>" +
           '<span class="lv-n">' + t.tools.length + " 個工具</span></summary>" +
           '<div class="lv-body">' +
-          (t.flow ? '<p class="lv-ask">💡 ' + esc(t.flow) + "</p>" : "") +
+          (t.flow ? '<p class="lv-ask"><b>思路：</b>' + esc(t.flow) + "</p>" : "") +
           t.tools.map(function (tool, xi) {
             return '<button class="lv-tool" data-t="' + ti + '" data-x="' + xi + '">' +
               (tool.fig ? '<span class="lv-thumb">' + figSVG(tool.fig) + "</span>" : "") +
               "<b>" + esc(tool.n) + extChip(tool) + "</b>" +
-              (tool.w ? "<span>👉 " + esc(tool.w) + "</span>" : "") + "</button>";
+              (tool.w ? "<span>" + esc(tool.w) + "</span>" : "") + "</button>";
           }).join("") + "</div></details>";
       }).join("") + "</div>";
       mount.querySelectorAll(".lv-tool").forEach(function (b) {
@@ -513,7 +513,7 @@
             (r.tool.fig ? '<span class="hit-thumb">' + figSVG(r.tool.fig) + "</span>" : "") +
             '<span class="hit-main"><span class="h-t">' + esc(r.tool.n) + extChip(r.tool) + "</span>" +
             '<span class="h-p">' + esc((r.dom.icon ? r.dom.icon + " " : "") + r.dom.n + " ▸ " + r.topic.n) + "</span>" +
-            (r.tool.w ? '<span class="h-w">👉 ' + esc(r.tool.w) + "</span>" : "") + "</span>";
+            (r.tool.w ? '<span class="h-w">' + esc(r.tool.w) + "</span>" : "") + "</span>";
           div.addEventListener("click", function () { openTool(r.tool, r.dom.n + " ▸ " + r.topic.n); });
           list.appendChild(div);
         });
@@ -536,7 +536,7 @@
         a.innerHTML = '<span class="dc-t" style="color:' + d.color + '">' + esc((d.icon ? d.icon + " " : "") + d.n) +
           (d.geo ? '<span class="geo-chip">圖解</span>' : "") + "</span>" +
           '<span class="dc-a">' + esc(d.ask) + "</span>" +
-          '<span class="dc-k">🔑 ' + esc((d.topics || []).map(function (t) { return t.n; }).join("・")) + "</span>";
+          '<span class="dc-k">主題：' + esc((d.topics || []).map(function (t) { return t.n; }).join("・")) + "</span>";
         grid.appendChild(a);
       });
       mount.appendChild(grid);
@@ -552,9 +552,9 @@
             '" data-t="' + ti + '" data-x="' + xi + '">' +
             '<span class="fc-fig">' + (x.fig ? figSVG(x.fig) : '<span class="fc-nofig">（無圖）</span>') + "</span>" +
             '<span class="fc-n">' + esc(x.n) + extChip(x) + "</span>" +
-            (x.d ? '<span class="fc-d">📖 定義：' + esc(x.d) + "</span>" : "") +
-            (x.w ? '<span class="fc-w">👉 ' + esc(x.w) + "</span>" : "") +
-            (x.l ? '<span class="fc-l">⚠️ ' + esc(x.l) + "</span>" : "") +
+            (x.d ? '<span class="fc-d">定義：' + esc(x.d) + "</span>" : "") +
+            (x.w ? '<span class="fc-w">使用時機：' + esc(x.w) + "</span>" : "") +
+            (x.l ? '<span class="fc-l">限制：' + esc(x.l) + "</span>" : "") +
             "</button>";
         }).join("");
         return '<h3 class="topic-h"><span style="color:' + dom.color + '">▍' + esc(t.n) + "</span>" +

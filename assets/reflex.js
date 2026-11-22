@@ -230,7 +230,7 @@
       b.type = "button";
       b.className = "rx-chip" + (on ? " on" : "") + (ok ? "" : " dead");
       b.disabled = !ok;
-      b.innerHTML = '<span class="c-ic">' + c.icon + '</span><span class="c-nm">' + c.name +
+      b.innerHTML = '<span class="c-ic">' + (window.NFZ_IC ? NFZ_IC.svg(c.icon) : "") + '</span><span class="c-nm">' + c.name +
         '</span><span class="c-ds">' + (ok ? c.desc : "此範圍沒有這類題目") + '</span>';
       b.addEventListener("click", function () {
         var i = sel.cats.indexOf(c.id);
@@ -249,10 +249,10 @@
     $("btnStart").disabled = empty;
     $("btnStart").classList.toggle("off", empty);
     $("setupLine").innerHTML = empty
-      ? '<span class="warn-src">⚠ 請至少選一個單元</span>'
+      ? '<span class="warn-src">請至少選一個單元</span>'
       : '<b>' + d.sec + ' 秒</b>（' + d.name + '）　▸　<b>' + scopeLabel() + '</b>　▸　' +
         use.length + ' 種題型　▸　題源 ' + src + ' 個' +
-        (src < 4 ? '<span class="warn-src">　⚠ 範圍很窄，10 題內會重複出現</span>' : "");
+        (src < 4 ? '<span class="warn-src">　範圍很窄，10 題內會重複出現</span>' : "");
 
     /* 紀錄 */
     var db = load();
@@ -277,7 +277,7 @@
         var s = st[c.id];
         if (!s || !s.n) return "";
         var acc = Math.round(100 * s.ok / s.n);
-        return '<div class="lf"><span class="lf-n">' + c.icon + ' ' + c.name + '</span>' +
+        return '<div class="lf"><span class="lf-n">' + (window.NFZ_IC ? NFZ_IC.svg(c.icon) : "") + c.name + '</span>' +
           '<span class="lf-bar"><i style="width:' + acc + '%"></i></span>' +
           '<span class="lf-v">' + acc + '%．平均 ' + (s.ms / s.n / 1000).toFixed(1) + ' 秒．' + s.n + ' 題</span></div>';
       }).join("") + '</div>';
@@ -311,7 +311,7 @@
     var box = $("cloudAccount");
     if (!box || !cloudOn) return;
     var u = C.user(), nick = C.nick();
-    var html = '<div class="rx-sec">👤 帳號 <small>登入後成績會上榜；排行榜只顯示暱稱，不會出現 Email</small></div>';
+    var html = '<div class="rx-sec">帳號 <small>登入後成績會上榜；排行榜只顯示暱稱，不會出現 Email</small></div>';
     if (!u) {
       var remembered = C.rememberedEmail();
       html += '<div class="rx-cloud">' +
@@ -326,7 +326,7 @@
       return;
     }
     html += '<div class="rx-cloud">' +
-      '<div class="cl-row"><span class="cl-who">✅ 已登入　<span class="cl-mail">' + esc(u.email) + '</span></span>' +
+      '<div class="cl-row"><span class="cl-who">已登入　<span class="cl-mail">' + esc(u.email) + '</span></span>' +
       '<button type="button" class="cl-out" id="clOut">登出</button></div>' +
       '<div class="cl-row"><label for="clNick">暱稱</label>' +
       '<input type="text" id="clNick" maxlength="12" placeholder="排行榜上顯示的名字（1～12 字）" value="' + esc(nick) + '">' +
@@ -343,7 +343,7 @@
     $("clSend").disabled = true;
     $("clMsg").textContent = "寄送中…";
     C.sendLink(email).then(function () {
-      $("clMsg").innerHTML = "📨 已寄到 <b>" + esc(email) + "</b>。打開那封信、點裡面的連結就會回到這裡並登入。沒收到請看垃圾信匣。";
+      $("clMsg").innerHTML = "已寄到 <b>" + esc(email) + "</b>。打開那封信、點裡面的連結就會回到這裡並登入。沒收到請看垃圾信匣。";
     }).catch(function (e) {
       $("clSend").disabled = false;
       $("clMsg").textContent = "寄送失敗：" + friendly(e);
@@ -372,7 +372,7 @@
     var box = $("cloudBoard");
     if (!box || !cloudOn) return;
     if (!boardSel.diff) boardSel.diff = sel.diff;
-    var html = '<div class="rx-sec">🏆 排行榜 <small>每個難度一個榜；本週榜每週一重新開始，總榜是歷史最高分</small></div>' +
+    var html = '<div class="rx-sec">排行榜 <small>每個難度一個榜；本週榜每週一重新開始，總榜是歷史最高分</small></div>' +
       '<div class="rx-cloud"><div class="bd-tabs">' +
       '<span class="bd-kind"><button type="button" data-k="week"' + (boardSel.kind === "week" ? ' class="on"' : "") + '>本週榜</button>' +
       '<button type="button" data-k="all"' + (boardSel.kind === "all" ? ' class="on"' : "") + '>總榜</button></span>' +
@@ -411,7 +411,7 @@
     var html = !rows.length ? '<div class="rx-none">這個榜還沒有人上榜——打一場就是第一名！</div>' :
       '<table class="bd-tbl' + (sum ? " sum" : "") + '">' + head +
       rows.map(function (x, i) {
-        var medal = i === 0 ? "🥇" : i === 1 ? "🥈" : i === 2 ? "🥉" : (i + 1);
+        var medal = i + 1;
         var who = '<td>' + medal + '</td><td>' + esc(x.nick) +
           (x.uid === me ? '<span class="bd-me">我</span>' : "") + '</td><td class="bd-s">' + x.score + '</td>';
         var rest = sum
@@ -472,8 +472,8 @@
   function cloudSubmit(run) {
     if (!cloudOn) return Promise.resolve("");
     var u = C.user();
-    if (!u) return Promise.resolve('<div class="rx-cloud end"><b>☁️ 這一場沒有上榜</b>：回選單用 Email 登入，之後的成績就會進排行榜。</div>');
-    if (!C.nick()) return Promise.resolve('<div class="rx-cloud end"><b>☁️ 這一場沒有上榜</b>：暱稱還沒設定好，回選單看一下「👤 帳號」。</div>');
+    if (!u) return Promise.resolve('<div class="rx-cloud end"><b>這一場沒有上榜</b>：回選單用 Email 登入，之後的成績就會進排行榜。</div>');
+    if (!C.nick()) return Promise.resolve('<div class="rx-cloud end"><b>這一場沒有上榜</b>：暱稱還沒設定好，回選單看一下「帳號」。</div>');
     return C.submit(run).then(function (r) {
       boardCache = {};
       renderBoard();                       /* 選單雖然還沒顯示，先把榜更新好 */
@@ -483,9 +483,9 @@
         return "<div>" + name + "：" + where +
           (x.improved ? '<span class="bd-new">刷新個人最佳！</span>' : "（個人最佳 " + x.best + " 分）") + plays + "</div>";
       }
-      return '<div class="rx-cloud end"><b>☁️ 成績已上傳</b>' + line("本週榜", r.week) + line("總榜", r.all) + '</div>';
+      return '<div class="rx-cloud end"><b>成績已上傳</b>' + line("本週榜", r.week) + line("總榜", r.all) + '</div>';
     }).catch(function (e) {
-      return '<div class="rx-cloud end"><b>☁️ 上傳失敗</b>：' + esc(friendly(e)) + '（本機紀錄已存）</div>';
+      return '<div class="rx-cloud end"><b>上傳失敗</b>：' + esc(friendly(e)) + '（本機紀錄已存）</div>';
     });
   }
 
@@ -549,7 +549,7 @@
   }
   function paintHud() {
     var h = "";
-    for (var i = 0; i < MAX_HP; i++) h += '<span class="hp' + (i < G.hp ? "" : " off") + '">❤</span>';
+    for (var i = 0; i < MAX_HP; i++) h += '<span class="hp' + (i < G.hp ? "" : " off") + '"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 13.5S2 9.8 2 5.8A3 3 0 0 1 8 4.4a3 3 0 0 1 6 1.4c0 4-6 7.7-6 7.7z"/></svg></span>';
     $("hudHp").innerHTML = h;
     $("hudScore").textContent = G.score;
     $("hudCombo").innerHTML = G.combo >= 2 ? '<b>' + G.combo + '</b> 連擊' : "連擊 " + G.combo;
@@ -576,7 +576,7 @@
     G.item = it;
     var cat = catOf(it.cat);
 
-    $("qCat").innerHTML = cat.icon + " " + cat.name +
+    $("qCat").innerHTML = (window.NFZ_IC ? NFZ_IC.svg(cat.icon) : "") + cat.name +
       '<span class="q-ch">' + REFLEX_BANK.shortOf(it.t) + '｜' + REFLEX_BANK.gradeName[it.g] +
       (it.ext ? '｜<b class="q-ext">補充</b>' : "") + '</span>';
     $("qText").innerHTML = it.q;
@@ -665,9 +665,9 @@
       $("monImg").classList.add("hit");
       setTimeout(function () { $("monImg").classList.remove("hit"); }, 380);
       paintMonHp();
-      var extra = speed > 0.7 ? '<span class="fb-bonus">⚡ 反射級！速度加成 +' + Math.round(12 * speed) + '</span>' : "";
+      var extra = speed > 0.7 ? '<span class="fb-bonus">反應很快，速度加成 +' + Math.round(12 * speed) + '</span>' : "";
       $("fb").className = "rx-fb ok show";
-      $("fb").innerHTML = '<div class="fb-h">✔ 正解　<span class="fb-t">' + (used / 1000).toFixed(2) + ' 秒</span>' + extra + '</div>' +
+      $("fb").innerHTML = '<div class="fb-h">✓ 正解　<span class="fb-t">' + (used / 1000).toFixed(2) + ' 秒</span>' + extra + '</div>' +
         (it.tip ? '<div class="fb-tip">' + it.tip + '</div>' : "");
       rm($("fb"));
       if (G.monHp <= 0) { killMonster(); return; }
@@ -683,7 +683,7 @@
     setTimeout(function () { $("arena").classList.remove("shake"); }, 420);
     G.wrongs.push({ cat: it.cat, t: it.t, g: it.g, q: it.q, ans: it.choices[it.ans], tip: it.tip, timeout: timeout });
     $("fb").className = "rx-fb no show";
-    $("fb").innerHTML = '<div class="fb-h">' + (timeout ? "⏱ 時間到" : "✘ 答錯") +
+    $("fb").innerHTML = '<div class="fb-h">' + (timeout ? "時間到" : "✗ 答錯") +
       '　<span class="fb-t">正解：' + it.choices[it.ans] + '</span></div>' +
       (it.tip ? '<div class="fb-tip">' + it.tip + '</div>' : "") +
       '<button class="fb-next" id="fbNext">繼續 ▶（Enter）</button>';
@@ -767,7 +767,7 @@
         var a = Math.round(100 * s.ok / s.n);
         var lv = a >= 80 ? "good" : a >= 50 ? "mid" : "bad";
         return '<div class="dg ' + lv + '">' +
-          '<div class="dg-n">' + c.icon + ' ' + c.name + '</div>' +
+          '<div class="dg-n">' + (window.NFZ_IC ? NFZ_IC.svg(c.icon) : "") + c.name + '</div>' +
           '<div class="dg-bar"><i style="width:' + a + '%"></i></div>' +
           '<div class="dg-v">' + s.ok + '/' + s.n + '（' + a + '%）．平均 ' +
           (s.ms / s.n / 1000).toFixed(1) + ' 秒' + (a >= 80 ? "．已經很穩" : "") + '</div></div>';
@@ -776,7 +776,7 @@
     var weak = Object.keys(G.perT).filter(function (id) { return G.perT[id].ok < G.perT[id].n; });
     weak.sort(function (x, y) { return (G.perT[x].ok / G.perT[x].n) - (G.perT[y].ok / G.perT[y].n); });
     var tDiag = !weak.length
-      ? '<div class="rx-none">這一場涵蓋的單元全部答對，沒有需要回頭補的地方 🎉</div>'
+      ? '<div class="rx-none">這一場涵蓋的單元全部答對，沒有需要回頭補的地方。</div>'
       : weak.map(function (id) {
         var s = G.perT[id];
         return '<div class="chd">' +
@@ -786,10 +786,10 @@
       }).join("");
 
     var wrongList = !G.wrongs.length
-      ? '<div class="rx-none">這一場全對，沒有錯題可以檢討 🎉</div>'
+      ? '<div class="rx-none">這一場全對，沒有錯題可以檢討。</div>'
       : G.wrongs.map(function (w) {
         var c = catOf(w.cat);
-        return '<div class="wr"><div class="wr-c">' + c.icon + ' ' + c.name +
+        return '<div class="wr"><div class="wr-c">' + (window.NFZ_IC ? NFZ_IC.svg(c.icon) : "") + c.name +
           (w.timeout ? '<span class="wr-to">超時</span>' : '<span class="wr-x">答錯</span>') +
           '<span class="wr-ch">' + REFLEX_BANK.shortOf(w.t) + '｜' + REFLEX_BANK.gradeName[w.g] + '</span></div>' +
           '<div class="wr-q">' + w.q + '</div>' +
@@ -812,9 +812,9 @@
         '<div><b>' + G.kills + '</b><span>擊倒怪物</span></div>' +
         '<div><b>' + G.hp + ' / ' + MAX_HP + '</b><span>剩餘生命</span></div>' +
       '</div>' +
-      '<h3 class="rx-h3">🔍 題型診斷</h3><div class="rx-diag">' + diag + '</div>' +
-      '<h3 class="rx-h3">📚 該回去補的單元</h3><div class="rx-chdiag">' + tDiag + '</div>' +
-      '<h3 class="rx-h3">📓 錯題回顧</h3><div class="rx-wrongs">' + wrongList + '</div>';
+      '<h3 class="rx-h3">題型診斷</h3><div class="rx-diag">' + diag + '</div>' +
+      '<h3 class="rx-h3">該回去補的單元</h3><div class="rx-chdiag">' + tDiag + '</div>' +
+      '<h3 class="rx-h3">錯題回顧</h3><div class="rx-wrongs">' + wrongList + '</div>';
 
     rm($("endBody"));
     show("scrEnd");
@@ -849,11 +849,11 @@
   document.addEventListener("DOMContentLoaded", function () {
     var db = load();
     muted = !!db.muted;
-    $("btnMute").textContent = muted ? "🔇 音效關" : "🔊 音效開";
+    $("btnMute").textContent = muted ? "音效關" : "音效開";
     $("btnMute").addEventListener("click", function () {
       muted = !muted;
       var d = load(); d.muted = muted; save(d);
-      $("btnMute").textContent = muted ? "🔇 音效關" : "🔊 音效開";
+      $("btnMute").textContent = muted ? "音效關" : "音效開";
       if (!muted) SFX.tick();
     });
     $("btnStart").addEventListener("click", startGame);
