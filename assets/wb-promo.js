@@ -21,7 +21,7 @@
     var a = document.createElement("a");
     a.href = URL;
     a.setAttribute("style", "color:#fff;text-decoration:none;flex:1;min-width:0;text-align:center");
-    a.innerHTML = "<b>牛夫子錯題本</b>：拍照收錯題、五級模擬卷 <span style=\"text-decoration:underline;white-space:nowrap\">去看看 →</span>";
+    a.innerHTML = "<b>牛夫子錯題本</b>：拍照收錯題、段考模擬卷 <span style=\"text-decoration:underline;white-space:nowrap\">去看看 →</span>";
     var x = document.createElement("button");
     x.type = "button"; x.setAttribute("aria-label", "收起"); x.textContent = "×";
     x.setAttribute("style", "flex:none;background:none;border:0;color:#fff;font:400 20px/1 sans-serif;padding:0 4px;cursor:pointer;opacity:.8");
