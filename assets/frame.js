@@ -116,9 +116,14 @@
     if (!INPUT) return '';
     return '<div class="fr-eval" data-e="' + esc(key) + '"><span>自評：</span>' + EVALS.map(function (x) { return '<button type="button" data-v="' + x[0] + '">' + x[1] + '</button>'; }).join('') + '</div>';
   }
+  // 推導樹／決策樹的分支條件（edge）：空白卡要學生自己寫，所以不印字、改留一格空白（和紙本 build_print.js 一致）；
+  // 段落設 showEdges: true 才照印。標準版照舊印整句。（2026-11-27；開線上作答 INPUT 時，字藏到按「對照標準版」才出現）
+  function edgeHidden(S) { return !S.showEdges && (INPUT || MODE !== 'std'); }
   function cellCard(F1, S, c, st, pos) {
-    var fl = c.fields || S.fields;
-    return '<div class="fr-cell" id="c-' + esc(c.id) + '"><div class="fr-cn">' + lab(c.id) + ' ' + txt(c.n) + (pos ? ' <span class="fr-pos">' + txt(pos) + '</span>' : '') + '</div>' +
+    var fl = c.fields || S.fields, hid = !!pos && edgeHidden(S), el = S.edgeLabel || '怎麼推';
+    var posHTML = !pos || (hid && !INPUT) ? '' : ' <span class="fr-pos' + (hid ? ' fr-pos-hid' : '') + '">' + txt(pos) + '</span>';
+    var edgeBox = hid ? fieldBox(S.id + '/' + c.id + '/_edge', el + (el === '看到' ? '什麼' : '') + '（什麼情況會走到這一格）', st.v[S.id + '/' + c.id + '/_edge']).replace('class="fr-f"', 'class="fr-f fr-edge"') : '';
+    return '<div class="fr-cell" id="c-' + esc(c.id) + '"><div class="fr-cn">' + lab(c.id) + ' ' + txt(c.n) + posHTML + '</div>' + edgeBox +
       fl.map(function (f) { return fieldBox(S.id + '/' + c.id + '/' + f.id, f.n, st.v[S.id + '/' + c.id + '/' + f.id], /formula/.test(f.id)); }).join('') +
       ansBlock(S, c) + evalBar('cell:' + c.id) + '</div>';
   }

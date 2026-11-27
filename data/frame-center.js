@@ -16,14 +16,14 @@ FRAME({
         { id: "2", n: "內心 $I$", fig: "center-i", ans: { def: "三個內角的角平分線", dist: "到三邊等距：距離 $=r$（$r$ 是內切圓半徑）", pos: "一定在內部", key: "$\\angle BIC=90^\\circ+\\frac12\\angle A$（$I$ 內心）；面積 $=\\frac12\\times r\\times$周長；直角三角形 $r=\\frac{a+b-c}{2}$（$a$、$b$ 兩股，$c$ 斜邊）", when: "內切圓、到三邊等距、角平分線、求 $r$" },
           tools: ["angle/center/內心 I（三角平分線交點）", "angle/center/直角三角形的內切圓半徑", "angle/center/尺規作圖：角平分線"], kp: ["center"],
           ex: [{ id: "n2a", q: "$\\triangle ABC$ 的內心 $I$，$\\angle A=50^\\circ$，則 $\\angle BIC=$", a: "$115^\\circ$", val: "115" }, { id: "n2b", q: "三邊 $3,4,5$ 的直角三角形，$r=$", a: "$1$", val: "1" }, { id: "n2c", q: "三邊 $5,5,6$ 的三角形，$r=$", a: "$\\frac32$（面積 $12$、周長 $16$）", val: "3/2" }] },
-        { id: "3", n: "重心 $G$", fig: "center-g", ans: { def: "三條中線（頂點連對邊中點）", dist: "把每條中線分成 $2:1$：頂點到重心 $:$ 重心到中點 $=2:1$（$\\overline{AG}:\\overline{GM}=2:1$，$M$ 是 $\\overline{BC}$ 中點）", pos: "一定在內部", key: "三中線把三角形分成 $6$ 塊等面積；$\\triangle GAB=\\triangle GBC=\\triangle GCA=\\frac13\\triangle ABC$", when: "中線、重心、平衡點、用中線切面積" },
+        { id: "3", n: "重心 $G$", fig: "center-g", ans: { def: "三條中線（頂點連對邊中點）", dist: "把每條中線分成 $2:1$：頂點到重心 $:$ 重心到中點 $=2:1$（$\\overline{AG}:\\overline{GM}=2:1$，$M$ 是 $\\overline{BC}$ 中點）", pos: "一定在內部", key: "三中線把三角形分成 $6$ 塊等面積；$\\triangle GAB$、$\\triangle GBC$、$\\triangle GCA$ 的面積都是 $\\triangle ABC$ 面積的 $\\frac13$", when: "中線、重心、平衡點、用中線切面積" },
           tools: ["angle/center/重心 G（三中線交點）", "angle/center/中線"], kp: ["center"],
-          ex: [{ id: "n3a", q: "中線 $\\overline{AM}=12$，$G$ 為重心，則 $\\overline{AG}=$", a: "$8$", val: "8" }, { id: "n3b", q: "$\\triangle ABC$ 面積 $36$，$G$ 為重心，則 $\\triangle GBC=$", a: "$12$", val: "12" }] }
+          ex: [{ id: "n3a", q: "中線 $\\overline{AM}=12$，$G$ 為重心，則 $\\overline{AG}=$", a: "$8$", val: "8" }, { id: "n3b", q: "$\\triangle ABC$ 面積 $36$，$G$ 為重心，則 $\\triangle GBC$ 的面積 $=$", a: "$12$", val: "12" }] }
       ]
     },
     {
       id: "s", title: "B　三種特殊三角形裡，三心在哪", type: "props", rowH: 15,
-      fields: [{ id: "o", n: "外心在哪、$R$ 怎麼算" }, { id: "i", n: "內心在哪、$r$ 怎麼算" }, { id: "g", n: "重心在哪" }],
+      fields: [{ id: "o", n: "外心在哪、外接圓半徑 $R$ 怎麼算" }, { id: "i", n: "內心在哪、內切圓半徑 $r$ 怎麼算" }, { id: "g", n: "重心在哪" }],
       rows: [
         { id: "4", n: "直角三角形（兩股 $a$、$b$，斜邊 $c$）", fig: "center-right", reduce: ["1", "2"], reduceNote: "外心是①的直角情形、$r$ 公式是②的特例", ans: { o: "斜邊中點，$R=\\frac c2$（斜邊中線 $=\\frac c2$）", i: "內部，$r=\\frac{a+b-c}{2}$", g: "斜邊中線上，離直角頂點 $\\frac23$ 中線 $=\\frac c3$" },
           tools: ["angle/center/外心 O（三中垂線交點）", "angle/center/直角三角形的內切圓半徑"], kp: ["center"],
@@ -48,19 +48,19 @@ FRAME({
           ex: [{ id: "n8", q: "$\\angle AOB=60^\\circ$，$P$ 在角平分線上且 $\\overline{OP}=4$，則 $P$ 到 $\\overrightarrow{OA}$ 的距離", a: "$2$（$30^\\circ$ 直角三角形）", val: "2" }] },
         { id: "9", n: "中線", fig: "center-median", reduce: ["3"], ans: { prop: "把三角形分成面積相等的兩塊（等底同高）", lead: "重心：用等底同高一路推，得每條中線被分成 $2:1$" },
           tools: ["angle/center/中線"], kp: ["center"],
-          ex: [{ id: "n9", q: "$\\triangle ABC$ 面積 $20$，$M$ 為 $\\overline{BC}$ 中點，則 $\\triangle ABM=$", a: "$10$", val: "10" }] }
+          ex: [{ id: "n9", q: "$\\triangle ABC$ 面積 $20$，$M$ 為 $\\overline{BC}$ 中點，則 $\\triangle ABM$ 的面積 $=$", a: "$10$", val: "10" }] }
       ]
     }
   ],
   final: [
     { id: "f1", q: "三心裡哪些一定在三角形內部？哪一個可能跑到外面、什麼時候？", ans: "內心、重心一定在內部。外心：銳角三角形在內部、直角三角形在斜邊中點、鈍角三角形在外部。", lines: 2 },
     { id: "f2", q: "三心都降成同一個基本動作，是什麼？（提示：畫兩條線就夠）", ans: "兩條線的交點。中垂線到兩端等距、角平分線到兩邊等距，所以兩條的交點自動滿足第三條；中線用等底同高推出 $2:1$。畫第三條只是檢查。", lines: 2 },
-    { id: "f3", q: "直角三角形的 $R=\\frac c2$ 和 $r=\\frac{a+b-c}{2}$ 各從哪裡來？", ans: "$R=\\frac c2$：直角所對的弦是直徑，外心就是斜邊中點。$r=\\frac{a+b-c}{2}$：直角頂點到兩切點都是 $r$（那一角是正方形），其餘切線段兩兩相等，所以 $(a-r)+(b-r)=c$。", lines: 2 }
+    { id: "f3", q: "直角三角形的外接圓半徑 $R$ 和內切圓半徑 $r$ 的公式（你在④填的那兩條），各是怎麼推出來的？", ans: "$R=\\frac c2$：直角所對的弦是直徑，外心就是斜邊中點。$r=\\frac{a+b-c}{2}$：直角頂點到兩切點都是 $r$（那一角是正方形），其餘切線段兩兩相等，所以 $(a-r)+(b-r)=c$。", lines: 2 }
   ],
   example: { q: "①「外心一定在三角形裡面」②「重心到三邊等距」，各錯在哪？各舉一個反例或改正。", ans: "①鈍角三角形的外心在外面（直角三角形在斜邊中點，也不在裡面）。②到三邊等距的是內心（到三頂點等距的是外心）；重心是把每條中線分成 $2:1$（頂點到重心：重心到中點），不是等距。", lines: 2 },
   pitfalls: [
     "把 $2:1$ 記成 $1:2$：是頂點到重心比重心到中點。",
-    "認定外心一定在三角形內；鈍角三角形的高、外心都可能在外面。",
+    "認定外心一定在三角形內；鈍角三角形的外心在外面，有兩條高也在外面。",
     "把內心與重心的性質互換（到三邊等距是內心，六塊等面積是重心）。",
     "直角三角形 $r$ 寫成 $\\frac{a+b+c}{2}$（那是周長的一半）。",
     "$\\angle BOC=2\\angle A$ 只在 $\\angle A$ 是銳角時；$\\angle A$ 鈍角時 $\\angle BOC=360^\\circ-2\\angle A$。只給 $\\angle BOC$ 求 $\\angle A$ 要寫兩個答案。",
